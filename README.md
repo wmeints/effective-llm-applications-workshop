@@ -93,11 +93,17 @@ To prepare for facilitating this workshop:
 
 ## Getting Started
 
-1. Clone the workshop repository: `git clone https://github.com/wmeints/effective-llm-applications-workshop/`
-2. Navigate to the workshop directory: `cd effective-llm-applications/workshop`
-3. Follow the setup instructions in the README.md
+1. Navigate to the workshop website: https://wmeints.github.com/effective-llm-applications-workshop
+2. Follow the setup instructions on the website.
 
 For questions or issues, please create an issue in the [GitHub repository](https://github.com/wmeints/effective-llm-applications/).
+
+## Working on the course materials
+
+This course is being developed as an [Astro](https://astro.build) website. You can find the sources for the
+course guides in the [site](./site) directory. The lab content is located in [labs](./labs).
+
+Please make sure to submit issues for things you want to see changed.
 
 ---
 
