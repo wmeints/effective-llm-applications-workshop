@@ -1,36 +1,56 @@
 ---
-title: Welcome to Starlight
-description: Get started building your docs site with Starlight.
+title: Learn how to build a RAG system in C# with Semantic Kernel
+description: Get started with the course Building Effective LLM-based Applications with Semantic Kernel
 template: splash
 hero:
-  tagline: Congrats on setting up a new Starlight project!
+  tagline: Create your own digital assistant on your content in just three hours!
   image:
     file: ../../assets/houston.webp
   actions:
-    - text: Example Guide
-      link: /guides/example/
+    - text: Get started
+      link: /effective-llm-applications-workshop/guides/01-fundamentals/
       icon: right-arrow
-    - text: Read the Starlight docs
-      link: https://starlight.astro.build
-      icon: external
-      variant: minimal
 ---
 
-import { Card, CardGrid } from '@astrojs/starlight/components';
+import { Card, CardGrid } from "@astrojs/starlight/components";
 
-## Next steps
+## What you'll learn in this course
 
 <CardGrid stagger>
-	<Card title="Update content" icon="pencil">
-		Edit `src/content/docs/index.mdx` to see this page change.
-	</Card>
-	<Card title="Add new content" icon="add-document">
-		Add Markdown or MDX files to `src/content/docs` to create new pages.
-	</Card>
-	<Card title="Configure your site" icon="setting">
-		Edit your `sidebar` and other config in `astro.config.mjs`.
-	</Card>
-	<Card title="Read the docs" icon="open-book">
-		Learn more in [the Starlight Docs](https://starlight.astro.build/).
-	</Card>
+  <Card
+    title="LLM Fundamentals and building a basic assistant with Semantic Kernel Application"
+    icon="rocket"
+  >
+    Discover the power of an LLM and how to unlock that power with Semantic
+    Kernel and .NET Aspire.
+  </Card>
+  <Card
+    title="Processing and embedding content for your assistant"
+    icon="add-document"
+  >
+    Learn how to process content effectively to get the best search results in
+    your assistant.
+  </Card>
+  <Card title="Implementing vector search" icon="open-book">
+    Learn how to use a vector database to find relevant context information for
+    your users' questions.
+  </Card>
+  <Card title="Integrating context & designing prompts for RAG" icon="setting">
+    Learn how to integrate context information effectively and how to collect
+    citations for information included in your assistant's response.
+  </Card>
 </CardGrid>
+
+## Who's this course for?
+
+- C# Developers
+- Software architects
+
+## System requirements
+
+To follow this workshop you'll need:
+
+- .NET 9 SDK
+- Access to a Azure OpenAI Service instance
+- Visual Studio Code or another programming editor
+- Docker Desktop or a similar containerization tool
