@@ -4,6 +4,8 @@ import starlight from "@astrojs/starlight";
 
 // https://astro.build/config
 export default defineConfig({
+  site: "https://wmeints.github.io/effective-llm-apps-workshop",
+  base: "/effective-llm-apps-workshop",
   integrations: [
     starlight({
       title: "Building Effective LLM-based applications with Semantic Kernel",
