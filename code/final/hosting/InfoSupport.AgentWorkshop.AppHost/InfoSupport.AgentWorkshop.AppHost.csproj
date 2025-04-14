@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <Sdk Name="Aspire.AppHost.Sdk" Version="9.2.0" />
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <UserSecretsId>00de0d5a-c481-4b54-b925-cd3433f15e92</UserSecretsId>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Aspire.Hosting.AppHost" Version="9.2.0" />
+        <PackageReference Include="Aspire.Hosting.Azure.CognitiveServices" Version="9.2.0" />
+        <PackageReference Include="Aspire.Hosting.NodeJs" Version="9.2.0" />
+        <PackageReference Include="Aspire.Hosting.PostgreSQL" Version="9.2.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference
+            Include="..\..\apps\chat\InfoSupport.AgentWorkshop.Chat\InfoSupport.AgentWorkshop.Chat.csproj" />
+    </ItemGroup>
+
+</Project>
