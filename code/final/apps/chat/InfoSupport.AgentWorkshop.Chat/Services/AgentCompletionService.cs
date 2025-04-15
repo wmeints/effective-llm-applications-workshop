@@ -37,7 +37,7 @@ public class AgentCompletionService(Kernel kernel, ApplicationDbContext applicat
     /// <returns>Returns the response as an async enumerable stream.</returns>
     public async IAsyncEnumerable<AgentResponseItem<StreamingChatMessageContent>> GenerateResponseAsync(AgentCompletionRequest request)
     {
-        ChatHistoryAgentThread? thread = null;
+
 
         var conversation = await applicationDbContext.Conversations
             .SingleOrDefaultAsync(x => x.ThreadId == request.ThreadId)
@@ -46,10 +46,11 @@ public class AgentCompletionService(Kernel kernel, ApplicationDbContext applicat
         if (conversation is null)
         {
             conversation = new Conversation(request.ThreadId);
+            await applicationDbContext.AddAsync(conversation);
         }
 
         var chatHistory = BuildChatHistory(conversation);
-        thread = new ChatHistoryAgentThread(chatHistory);
+        ChatHistoryAgentThread? thread = thread = new ChatHistoryAgentThread(chatHistory);
 
         // Record the user message with the current conversation.
         conversation.AppendUserMessage(request.Prompt);
@@ -71,7 +72,6 @@ public class AgentCompletionService(Kernel kernel, ApplicationDbContext applicat
 
         conversation.AppendAssistantResponse(assistantResponseMessageBuilder.ToString());
 
-        applicationDbContext.Update(conversation);
         await applicationDbContext.SaveChangesAsync().ConfigureAwait(false);
     }
 
