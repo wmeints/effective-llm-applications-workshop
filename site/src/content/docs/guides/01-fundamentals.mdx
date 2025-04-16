@@ -2,7 +2,7 @@
 title: Fundamentals & Environment Setup
 ---
 
-import { Aside,Steps } from '@astrojs/starlight/components';
+import { Aside, Steps } from "@astrojs/starlight/components";
 
 In this first module, we will learn how to use a large language model with Semantic Kernel.
 By the end of this module, you'll:
@@ -39,9 +39,9 @@ have to repeat the prediction process. This time, however, you input the origina
 sequence with the newly created output token to obtain the next token.
 
 <Aside>
-This sequence of events where we predict a token and use that with the original sequence
-to obtain the next token is why LLMs are slightly stupid. They can only predict the next
-likely token!
+  This sequence of events where we predict a token and use that with the
+  original sequence to obtain the next token is why LLMs are slightly stupid.
+  They can only predict the next likely token!
 </Aside>
 
 An LLM has no internal state or notion of a conversation. So, while you think you're
@@ -107,10 +107,10 @@ something in the environment like switching on a light or sending an email. Ther
 limit to what you can do with tools.
 
 <Aside>
-**Despite what we told you, there is somewhat of a limit to what you can do with tools**  
-You shouldn't provide your agent with 100 tools because it can't distinguish between
-that many tools. Also, don't add too many parameters to your tool because that doesn't
-work either.
+  **Despite what we told you, there is somewhat of a limit to what you can do
+  with tools**   You shouldn't provide your agent with 100 tools because it
+  can't distinguish between that many tools. Also, don't add too many parameters
+  to your tool because that doesn't work either.
 </Aside>
 
 ## What's Semantic Kernel and why should you use it?
@@ -161,14 +161,16 @@ cd hosting/InfoSupport.AgentWorkshop.AppHost
 dotnet user-secrets set "ConnectionStrings:languagemodel" "<connection string>"
 ```
 
-**NOTE** Replace the `<connection string>` placeholder with the connection string you
+<Aside type="tip">
+Replace the `<connection string>` placeholder with the connection string you
 received in the email from us!
+</Aside>
 
 After setting the connection string you're good to go setting up Semantic Kernel.
 
 ## Configuring Semantic Kernel
 
-Semantic Kernel is packaged as a Nuget package and can be installed into an ASP.NET Core
+Semantic Kernel is packaged as a Nuget package. You can install it into an ASP.NET Core
 application by running the following command from a terminal in the directory
 `apps/chat/InfoSupport.AgentWorkshop.Chat`:
 
@@ -176,8 +178,8 @@ application by running the following command from a terminal in the directory
 dotnet install Microsoft.SemanticKernel
 ```
 
-This installs the core package and two LLM providers: Azure OpenAI, and OpenAI.
-You can access other providers by separate installing packages.
+This command installs the core package and two LLM providers: Azure OpenAI, and OpenAI.
+You can access other providers by separately installing packages.
 
 | Provider           | Package Name                                                                                                                                     |
 | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -187,8 +189,9 @@ You can access other providers by separate installing packages.
 | Ollama             | [Microsoft.SemanticKernel.Connectors.Ollama](https://www.nuget.org/packages/Microsoft.SemanticKernel.Connectors.Ollama/1.46.0-alpha)             |
 | Amazon / Anthropic | [Microsoft.SemanticKernel.Connectors.Amazon](https://www.nuget.org/packages/Microsoft.SemanticKernel.Connectors.Amazon/1.46.0-alpha)             |
 
-After installing Semantic Kernel, you need to configure the Kernel object that we discussed in the previous section by
-adding the following code to `Program.cs` just below the call `builder.AddServiceDefaults()`.
+After installing Semantic Kernel, you need to configure the Kernel object we discussed
+in the previous section by adding the following code to `Program.cs` just below the call
+`builder.AddServiceDefaults()`.
 
 ```csharp
 builder.AddAzureOpenAIClient("languagemodel");
@@ -200,25 +203,23 @@ builder.Services.AddKernel()
 
 This code performs the following steps:
 
-1. First, we configure an Azure OpenAI client and point it to the languagemodel
-   connection string.
-2. Next, we configure a new kernel object including a chat completion model and
-   embedding model.
+1. First, we configure an Azure OpenAI client and point it to the languagemodel connection string.
+2. Next, we configure a new kernel object, including a chat completion and embedding model.
 
-Note that because we're using Aspire we'll get the connection string for the language
-model for free. The `languagemodel` connectionstring is pre-configured in the
-application host and automatically injected.
+Note that because we're using Aspire, we'll get the connection string for the language
+model for free. The `languagemodel` connection is pre-configured in the application host
+and automatically injected.
 
-The completion model configured here is used later to generate a response to the user's
-prompts. It's important to understand that the chat completion model is the actual LLM
-(we choose GPT-4o for the workshop).
+We'll use the completion model configured here later to generate a response to the
+user's prompts. It's important to understand that the chat completion model is the
+actual LLM.
 
-The embedding model we've added here we'll need to generate vectors for the search. The
-embedding model is not an LLM but rather a model that turns text into a vector
-representation. Don't worry if this doesn't make much sense now, we'll explain more
-about this later.
+With the embedding model we've added here, we'll need to generate vectors for the
+search. The embedding model is not an LLM but rather a model that turns text into a
+vector representation. Don't worry if this doesn't make much sense now; we'll explain
+more later.
 
-At this point we have a working language model, but nothing to talk to. Let's set that
+At this point, we have a working language model, but nothing to talk to. Let's set that
 up next.
 
 ## Configuring a basic agent in the application
@@ -231,10 +232,11 @@ directory.
 
 The `AgentCompletionService` class needs access to the `Kernel` object and the
 `ApplicationDbContext` class. The `Kernel` is used to access the LLM. The
-`ApplicationDbContext` is used to access conversation history information.
+`ApplicationDbContext` is used to access information on conversation history.
 
-Let's take a look at implementing some interaction with our agent. In the `AgentCompletionService` class, we need to define 
-an agent that we can talk to. Follow these steps to configure the agent:
+Let's take a look at implementing some interaction with our agent. In the
+`AgentCompletionService` class, we must define an agent to whom we can talk. Follow
+these steps to configure the agent:
 
 <Steps>
 1. Add the following code at the start of the class:
@@ -242,35 +244,36 @@ an agent that we can talk to. Follow these steps to configure the agent:
    ```csharp
    private readonly ChatCompletionAgent _chatCompletionAgent = new()
    {
-       Name = "Mike",
-       Instructions = EmbeddedResource.Read("instructions.txt"),
-       Kernel = kernel,
+      Name = "Mike",
+      Instructions = EmbeddedResource.Read("instructions.txt"),
+      Kernel = kernel,
    };
    ```
 
-   This code defines an agent with a name, instructions, and the kernel instance. The agent
-   loads it's instructions from a file called `instructions.txt`.
+   This code defines an agent with a name, instructions, and the kernel instance. The
+   agent loads its instructions from a file called `instructions.txt`.
 
-2. Next, let's look at the `instructions.txt` to understand the agent's instructions. You can
-   find the file in the root of the chat project in the `apps/chat/InfoSupport.AgentWorkshop.Chat`
-   directory.
+2. Next, look at the `instructions.txt` to understand the agent's instructions. You can
+   find the file in the root of the chat project in the
+   `apps/chat/InfoSupport.AgentWorkshop.Chat` directory.
 
    The instructions should look like this:
 
    ```text
    You're a friendly AI. Your name is Mike.
    ```
+
 </Steps>
 
 Next, we need to implement the `GenerateResponseAsync` method. This method is
 responsible for generating a streaming response to a question from the user.
 
 <Steps>
-1. First, we need to retrieve a conversation or create one.
+1. First, we need to retrieve a conversation or create a new one.
    
-   When you're chatting to a digital assistant you typically want to do that in the
-   context of a conversation. We're using a `Conversation` class that has a collection
-   of messages and some other metadata. You can find the `Conversation` class in
+   When you chat with a digital assistant, you typically want to do that in the context
+   of a conversation. We're using a `Conversation` class with a collection of messages
+   and other metadata. You can find the `Conversation` class in
    `apps/chat/InfoSupport.AgentWorkshop.Chat/Models`. Before generating an actual
    response, we should look up an existing conversation or create one if there's none
    with the specified threadId.
@@ -279,23 +282,23 @@ responsible for generating a streaming response to a question from the user.
 
    ```csharp
    var conversation = await applicationDbContext.Conversations
-       .SingleOrDefaultAsync(x => x.ThreadId == request.ThreadId)
-       .ConfigureAwait(false);
+      .SingleOrDefaultAsync(x => x.ThreadId == request.ThreadId)
+      .ConfigureAwait(false);
 
    if (conversation is null)
    {
-       conversation = new Conversation(request.ThreadId);
-       await applicationDbContext.AddAsync(conversation);
+      conversation = new Conversation(request.ThreadId);
+      await applicationDbContext.AddAsync(conversation);
    }
    ```
-   
+
    <Aside>
    **Why are we creating conversations here?**  
-   You may be wondering, why we're generating new conversations and not raising an error.
-   In the frontend, when we start a new conversation we generate an ID to track client
-   state with. We reuse this ID on the server to keep things simple for the client. If
-   the user doesn't send any prompt, we'll never create a conversation. No need to track
-   empty conversations.
+   You may be wondering why we're generating new conversations and not raising an error.
+   In the front end, when we start a new conversation, we generate an ID to track client
+   state with. We reuse this ID on the server to keep things simple for the client. If the
+   user doesn't send a prompt, we'll never create a conversation. There is no need to
+   track empty conversations on the server.
    </Aside>
 
 2. After looking up the conversation data, we need to create a `ChatHistoryAgentThread`
@@ -311,8 +314,8 @@ responsible for generating a streaming response to a question from the user.
    ChatHistoryAgentThread? thread = thread = new ChatHistoryAgentThread(chatHistory);
    ```
 
-   This code uses a helper method `BuildChatHistory` to fill the thread with data. 
-   
+   This code uses a helper method `BuildChatHistory` to fill the thread with data.
+
 3. Add the following code to the end of the `AgentCompletionService` class to implement
    the `BuildChatHistory` method:
 
@@ -338,14 +341,19 @@ responsible for generating a streaming response to a question from the user.
    ```
 
    <Aside>
-   **Now I'm confused, we have threads and chat history?!**  
-   Agents come in various shapes. You can have a local agent like the one we're building
-   here but you can have an agent that uses the Azure AI Agent Service, finally you can
-   also use the OpenAI or Google Agent APIs to build agents. Local agents don't manage
-   their own chat history while the cloud services mentioned here manage conversation
-   history for you. So if you're using a cloud service to store your agent, you can skip
-   the whole conversation management stuff.
-   </Aside>
+      **Threads and ChatHistory explained**  
+      Agents require an agent thread. When you use a service like Azure AI Agents, the
+      server maintains the thread for you. Since we're building a chat history agent, we
+      must maintain the thread content ourselves.
+
+      The ChatHistoryAgentThread uses the `ChatHistory` class to store the messages in
+      the thread. You can think of the `ChatHistory` class as a collection of messages
+      ordered by timestamp. The `ChatHistory` class is a simple wrapper around a list of
+      messages.
+
+      If you're interested in using Azure AI Agents, check out the
+      [documentation](https://learn.microsoft.com/en-us/semantic-kernel/frameworks/agent/azure-ai-agent?pivots=programming-language-csharp).
+      </Aside>
 
 4. After creating the thread for the agent, we can record the submitted prompt with the
    conversation and invoke the agent.
@@ -358,16 +366,14 @@ responsible for generating a streaming response to a question from the user.
    var responseStream = _chatCompletionAgent.InvokeStreamingAsync(request.Prompt, thread);
    ```
 
-   The response stream here is an `IAsyncEnumerable`. An enumerable stream of pieces of
-   content generated by the LLM. If you don't like streaming you can use `InvokeAsync`
-   instead. For this workshop we use streaming as it provides a nicer user experience.
+   The response stream here is an `IAsyncEnumerable` — an enumerable stream of
+   LLM-generated content. If you don't like streaming,, you can use `InvokeAsync`
+   instead. For this workshop, we use streaming as it provides a nicer user experience.
 
-5. Add the following code to the `GenerateResponseAsync` method to record the assistant
-   response.
-   
-   Our agent doesn't really track chat history so we need to do
-   that ourselves. Add the following code to record the response and forward the chunks to
-   the caller:
+5. Add the following code to the `GenerateResponseAsync` method to record the assistant response.
+
+   Our agent doesn't track chat history, so we need to do that ourselves. Add the
+   following code to record the response and forward the chunks to the caller:
 
    ```csharp
    var assistantResponseMessageBuilder = new StringBuilder();
@@ -388,11 +394,12 @@ responsible for generating a streaming response to a question from the user.
    ```
 
 6. Add the following code to the `GenerateResponseAsync` method to save the conversation
-   with the new user prompt and recorded assistant response.
+   with the new user prompt and record the assistant response.
 
    ```csharp
    await applicationDbContext.SaveChangesAsync().ConfigureAwait(false);
    ```
+
 </Steps>
 
 The agent can now talk to us. If you start the application host in
@@ -401,36 +408,37 @@ frontend at `http://localhost:3000` and talk to the agent!
 
 ## Combining Semantic Kernel and .NET Aspire
 
-Building LLM-based applications and especially RAG applications involve a lot of moving
-parts. First and foremost you have to deal with a language model hosted in the cloud.
-Next, you need to record history and store documents in a vector database. Finally, you
-need to combine frontend and APIs into a working application.
+Building LLM-based applications, and especially RAG applications, involves many moving
+parts. First and foremost, you have to deal with a language model hosted in the cloud.
+Next, you must record history and store documents in a vector database. Finally, you
+need to combine the front end and APIs into a working application.
 
 Combining all these components is a lot of work. But there's is a solution: .NET Aspire.
 A new framework from Microsoft that helps developers build distributed applications.
+
 Aspire has a couple of components to it that matter for building LLM-based applications:
 
-1. **The application host**, which serves as an orchestrator putting all the moving
-   parts together so you can run the infrastructure, API, and frontend by starting an
+1. **The application host** serves as an orchestrator, putting all the moving parts
+   together so you can run the infrastructure, API, and front end by starting an
    application host project.
- 
-2. **The Aspire dashboard**, which exposes metrics, logging, and tracing in a single
-   website for all the components in the solution. It makes it a lot easier to debug
+
+2. **The Aspire dashboard** exposes metrics, logging, and tracing in a single website
+   for all the components in the solution. It makes it a lot easier to debug
    interactions in your LLM-based application. Also, it helps you discover other
    important information like the URL for the frontend, etc.
 
-3. **The service defaults**, this component is a class library containing the necessary
-   settings to collect the diagnostics for the dashboard and other general-purpose code
-   for the distributed application.
+3. **The service defaults** provide applicable base settings necessary to collect the
+   diagnostics for the dashboard and other general-purpose code for the distributed
+   application.
 
-While the main focus of Aspire is on orchestrating distributed applications, you can use
-the application model you create in the application host to generate deployment scripts.
-For example, you can use the [Azure Developer CLI][AZD] to deploy Aspire-based
-application to Azure quite easily.
+While Aspire mainly focuses on orchestrating distributed applications, you can generate
+deployment scripts using the application model you create in the application host. For
+example, you can easily use the [Azure Developer CLI][AZD] to deploy an Aspire-based
+application to Azure.
 
-For the purpose of this workshop, we made sure that the application host and service
+For the purpose of this workshop, we ensured that the application host and service
 defaults are preconfigured for you. We highly recommend copying the code from the
-starter folder in each lab to make sure you have the right configuration.
+starter folder in each lab to ensure the right configuration.
 
 If you feel up to it, you can configure the application host yourself by following these
 two tutorials:
@@ -440,11 +448,13 @@ two tutorials:
 
 ## Summary and next steps
 
-In this module we covered the basic concepts of LLMs. We then discussed what Semantic Kernel is
-and how the various concepts in LLMs are made easier with Semantic Kernel. Finally, we covered how
-to apply the concepts offered by Semantic Kernel to build a basic agent.
+In this module, we covered the basic concepts of LLMs. We then discussed what Semantic
+Kernel is and how the various concepts in LLMs are made easier with Semantic Kernel.
+Finally, we covered how to apply the concepts offered by Semantic Kernel to build a
+basic agent.
 
-In the next module we'll extend the basic agent with the capacity to index documents that the agent
-can later search through to give answers to questions that users may have about Semantic Kernel.
+In the next module, we'll extend the basic agent with the capacity to index documents
+that the agent can later search through to give answers to questions that users may have
+about Semantic Kernel.
 
 [AZD]: https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/overview?tabs=windows
