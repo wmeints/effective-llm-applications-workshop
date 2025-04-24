@@ -36,7 +36,7 @@ public static class CompletionEndpoints
 
                 var serializedPayload = JsonSerializer
                     .Serialize(deltaPayload, serializerOptions)
-                    .Replace("\n", "").Replace("\n", " ");
+                    .Replace("\r", "").Replace("\n", " ");
 
                 // We're writing out streaming event of type delta so we can figure out how to parse the response on the client.
                 // We're serializing the response content as JSON on a single line as per the SSE protocol.
