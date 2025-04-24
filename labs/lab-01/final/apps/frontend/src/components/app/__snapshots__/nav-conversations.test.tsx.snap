@@ -1,0 +1,121 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`NavConversations > renders conversations list after loading 1`] = `
+<div>
+  <div
+    class="group/sidebar-wrapper has-data-[variant=inset]:bg-sidebar flex min-h-svh w-full"
+    data-slot="sidebar-wrapper"
+    style="--sidebar-width: 16rem; --sidebar-width-icon: 3rem;"
+  >
+    <ul
+      class="flex w-full min-w-0 flex-col gap-1"
+      data-sidebar="menu"
+      data-slot="sidebar-menu"
+    >
+      <li
+        class="group/menu-item relative"
+        data-sidebar="menu-item"
+        data-slot="sidebar-menu-item"
+      >
+        <button
+          class="peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left outline-hidden ring-sidebar-ring transition-[width,height,padding] focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-data-[sidebar=menu-action]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-2! [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground h-8 text-sm"
+          data-active="false"
+          data-sidebar="menu-button"
+          data-size="default"
+          data-slot="sidebar-menu-button"
+        >
+          <a
+            href="/conversations/1e8e108e-5a9b-4cbe-a4ee-f3e65431a3a1"
+          >
+            2025-04-14 00:00:00
+          </a>
+        </button>
+      </li>
+      <li
+        class="group/menu-item relative"
+        data-sidebar="menu-item"
+        data-slot="sidebar-menu-item"
+      >
+        <button
+          class="peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left outline-hidden ring-sidebar-ring transition-[width,height,padding] focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-data-[sidebar=menu-action]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-2! [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground h-8 text-sm"
+          data-active="false"
+          data-sidebar="menu-button"
+          data-size="default"
+          data-slot="sidebar-menu-button"
+        >
+          <a
+            href="/conversations/1e8e108e-5a9b-4cbe-a4ee-f3e65431a3a2"
+          >
+            2025-04-14 00:00:00
+          </a>
+        </button>
+      </li>
+      <li
+        class="group/menu-item relative"
+        data-sidebar="menu-item"
+        data-slot="sidebar-menu-item"
+      >
+        <a
+          class="peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left outline-hidden ring-sidebar-ring transition-[width,height,padding] focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-data-[sidebar=menu-action]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-2! [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground h-8 text-sm text-muted-foreground"
+          data-active="false"
+          data-sidebar="menu-button"
+          data-size="default"
+          data-slot="sidebar-menu-button"
+          href="/conversations"
+        >
+          Browse all conversations
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
+`;
+
+exports[`NavConversations > renders loading state correctly 1`] = `
+<div>
+  <div
+    class="group/sidebar-wrapper has-data-[variant=inset]:bg-sidebar flex min-h-svh w-full"
+    data-slot="sidebar-wrapper"
+    style="--sidebar-width: 16rem; --sidebar-width-icon: 3rem;"
+  >
+    <ul
+      class="flex w-full min-w-0 flex-col gap-1"
+      data-sidebar="menu"
+      data-slot="sidebar-menu"
+    >
+      <div
+        class="space-y-4 flex flex-col"
+      >
+        <div
+          class="bg-accent animate-pulse rounded-md h-24 w-full"
+          data-slot="skeleton"
+        />
+        <div
+          class="bg-accent animate-pulse rounded-md h-24 w-full"
+          data-slot="skeleton"
+        />
+        <div
+          class="bg-accent animate-pulse rounded-md h-24 w-full"
+          data-slot="skeleton"
+        />
+      </div>
+      <li
+        class="group/menu-item relative"
+        data-sidebar="menu-item"
+        data-slot="sidebar-menu-item"
+      >
+        <a
+          class="peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left outline-hidden ring-sidebar-ring transition-[width,height,padding] focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-data-[sidebar=menu-action]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-2! [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground h-8 text-sm text-muted-foreground"
+          data-active="false"
+          data-sidebar="menu-button"
+          data-size="default"
+          data-slot="sidebar-menu-button"
+          href="/conversations"
+        >
+          Browse all conversations
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
+`;
