@@ -16,7 +16,9 @@ user's questions based on the knowledge we've provided to the agent. For now, we
 focus on creating a basic chat agent; in later modules, we'll extend its behavior with
 tools to make it more powerful.
 
-Let's begin by understanding the basics of a large language model.
+Let's begin by understanding the basics of a large language model. You can [skip over
+this section](#whats-semantic-kernel-and-why-should-you-use-it) if you already have
+experience with LLMs.
 
 ## Introduction to Large Language Models
 
@@ -108,7 +110,8 @@ limit to what you can do with tools.
 
 <Aside>
   **Despite what we told you, there is somewhat of a limit to what you can do
-  with tools**   You shouldn't provide your agent with 100 tools because it
+  with tools**  
+  You shouldn't provide your agent with 100 tools because it
   can't distinguish between that many tools. Also, don't add too many parameters
   to your tool because that doesn't work either.
 </Aside>
@@ -175,7 +178,7 @@ application by running the following command from a terminal in the directory
 `apps/chat/InfoSupport.AgentWorkshop.Chat`:
 
 ```bash
-dotnet install Microsoft.SemanticKernel
+dotnet add package Microsoft.SemanticKernel
 ```
 
 This command installs the core package and two LLM providers: Azure OpenAI, and OpenAI.
