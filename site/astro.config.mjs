@@ -20,6 +20,7 @@ export default defineConfig({
             // Each item here is one entry in the navigation menu.
             { label: "Fundamentals & environment setup", slug: "guides/01-fundamentals" },
             { label: "Document processing and embeddings", slug: "guides/02-document-processing-and-embeddings" },
+            { label: "Context integration and prompt design", slug: "guides/03-context-integration-and-prompt-design" },
           ],
         },
         {
