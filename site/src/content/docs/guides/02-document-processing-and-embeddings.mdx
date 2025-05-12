@@ -160,7 +160,7 @@ for (int i = 0; i < text.Length; i += chunkSize)
 
 ---
 
-#### **Improved Chunking with Overlap**
+#### Improved Chunking with Overlap
 
 The basic chunking approach has a significant limitation: it can split text in the 
 middle of sentences or paragraphs, breaking the natural flow of the content. To 
@@ -266,10 +266,12 @@ foreach (var file in files)
 
 </details>
 
-<Aside>
-RAG in production requires more sophisticated chunking strategies. 
+<Aside type="caution" title="Using more sophisticated chunking strategies">
+When you plan on deploying your RAG to production, make sure you test the solution with multiple chunking strategies to find the right one for you.
+We know from various experiments that the size of the chunks and where you split the text into a new chunk matters a lot in how easy it is for the LLM
+to answer your question. If the LLM can't find the answer, it will make up one even if you asked it not to.
 
-TODO
+You can learn more about testing RAG systems in [the book](https://leanpub.com/effective-llm-applications-with-semantic-kernel/)
 </Aside>
 ---
 
@@ -458,11 +460,7 @@ and create embeddings that can be used to represent the meaning of the text.
     ```csharp
     var kernelBuilder =  Kernel.CreateBuilder();
     ```
-
-2. Get an embedding model API key.
-TODO
-
-3. Add an embedding model to the kernel.
+2. Add an embedding model to the kernel.
 The embedding model is used by semantic kernel to generate embeddings for the chunks.
 
     ```csharp
@@ -476,6 +474,11 @@ The embedding model is used by semantic kernel to generate embeddings for the ch
         )
     .Build();
     ```
+
+    <Aside type="tip" title="Use the API key from the e-mail we sent you">
+    Make sure you use the API key, endpoint and deployment name from the e-mail we sent you. 
+    </Aside>
+
 4. Create the TextEmbeddingGenerationService.
 This service is used to generate embeddings for the chunks.
 
