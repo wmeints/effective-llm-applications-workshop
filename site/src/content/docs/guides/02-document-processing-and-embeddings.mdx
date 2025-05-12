@@ -53,114 +53,42 @@ In this lab, we'll build up our understanding of document chunking by
 implementing different strategies using Semantic Kernel. We'll start with basic
 chunking and progress to more sophisticated approaches.
 
+Make sure to copy the starter files for this lab from [code/module-02](https://github.com/wmeints/effective-llm-applications-workshop/tree/code/module-02).
+You can also continue working on the files from the previous module.
+
 <Steps>
 
-1. Create a new .NET console application:
-
-   ```bash
-   dotnet new console -n DocumentChunkingLab
-   cd DocumentChunkingLab
-   ```
-
-2. Download the sample content for the RAG system. As a sample, we'll use the raw content of the book "Building Effective LLM-based Applications with Semantic Kernel".
+1. Download the sample content for the RAG system. We'll use the raw content of the book "Building Effective LLM-based Applications with Semantic Kernel".
    [Download the book raw markdown files as dataset.](https://github.com/wmeints/effective-llm-applications/tree/main/manuscript). 
-   Place these files in a directory called `Content` in the project root.
+   Place these files in the `apps/indexer/InfoSupport.AgentWorkshop.Indexer/Content` directory.
 
-3. Search for content files in the `Content` directory. Add the following code to the `Program.cs` file.
+2. Search for content files in the `Content` directory. Modify `apps/indexer/InfoSupport.AgentWorkshop.Indexer/Services/ContentIndexerService.cs` file and add the following code
+   to the `ProcessContentFilesAsync` method.
 
     ```csharp
-    var files = Directory.GetFiles(
-        "Content", "*.md", SearchOption.AllDirectories);
+    var files = Directory.GetFiles(contentDirectory, "*.md", SearchOption.AllDirectories);
     ```
 
-4. Loop through all files and read them into memory. Add the following code to the `Program.cs` file.
+3. Loop through all files and read them into memory. Add the following code to the `ProcessContentFilesAsync` method.
 
     ```csharp
     foreach (var file in files)
     {
-        var text = await File.ReadAllText(file);
-
-        //TODO: Chunk the text
+        var text = await File.ReadAllTextAsync(file, cancellationToken);
+        await ChunkFileContentAsync(file, text, cancellationToken);
     }
     ```
 
-</Steps>
-
-Chunking is the process of splitting a text into smaller chunks. The simplest 
-approach is to split text into fixed-size pieces. While this method is 
-straightforward, it may break sentences or paragraphs mid-way, potentially losing 
-context.
-
-<Steps>
-1. Define the chunk size as a constant at the top of the program.
+4. Modify the `ChunkFileContentAsync` method to split the text into chunks.
 
     ```csharp
-    const int chunkSize = 1000;
-    ```
-
-2. Extend the file processing loop with chunking logic. Add the following 
-code inside the `foreach` loop we created in the previous exercise.
-
-    ```csharp
-    var chunks = new List<string>();
-    for (int i = 0; i < text.Length; i += chunkSize)
+    var lines = fileContent.Split(["\r\n", "\n"], StringSplitOptions.None);
+    var chunks = TextChunker.SplitMarkdownParagraphs(lines, ChunkSize, OverlapSize);
+    
+    foreach (var chunk in chunks)
     {
-        chunks.Add(text.Substring(i, Math.Min(chunkSize, text.Length - i)));
+        await UpsertChunkAsync(fileName, chunk, cancellationToken);
     }
-    ```
-</Steps>
-
-#### Exercise: Improved Chunking with Overlap
-
-The basic chunking approach has a significant limitation: it can split text in the 
-middle of sentences or paragraphs, breaking the natural flow of the content. To 
-address this, we can introduce overlapping chunks that preserve context across 
-boundaries.
-
-<Steps>
-1. Define the overlap size at the top of the program.
-
-    ```csharp
-    const int overlap = 200;
-    ```
-
-2. Implement the chunker with overlap. Modify the content of the `foreach` loop
-   processing the files so that it contains the following code:
-
-    ```csharp
-    var chunks = new List<string>();
-    for (int i = 0; i < text.Length; i += chunkSize - overlap)
-    {
-        chunks.Add(text.Substring(i, 
-            Math.Min(chunkSize, text.Length - i)));
-    }
-    ```
-
-</Steps>
-
-#### Exercise: Chunking with Semantic Kernel
-
-While overlapping chunks help preserve context, they still rely on fixed-size
-boundaries. Semantic Kernel provides a more sophisticated approach that
-understands the natural structure of text, splitting it based on semantic
-boundaries like paragraphs and sections.
-
-<Steps>
-1. Add required NuGet packages to the application by running the following
-   command from the project directory in your favorite terminal:
-
-   ```bash
-   dotnet add package Microsoft.SemanticKernel
-   dotnet add package Microsoft.SemanticKernel.Plugins.Memory --prerelease
-   ```
-
-2. Use the `TextChunker.SplitMarkdownParagraphs` method to split the text based
-   on semantic boundaries. Replace the content of the file processing `foreach`
-   loop with the following code:
-
-    ```csharp
-    var chunks = TextChunker.SplitMarkdownParagraphs(
-        lines, maxTokensPerParagraph: 1000);
     ```
 </Steps>
 
@@ -168,13 +96,14 @@ You now have all the logic required to chunk your documents into content
 that we can use for semantic search.
 
 <Aside type="caution" title="Test your chunking strategies">
-When you plan on deploying your RAG to production, make sure you test the solution with multiple chunking strategies to find the right one for you.
-We know from various experiments that the size of the chunks and where you split the text into a new chunk matters a lot in how easy it is for the LLM
-to answer your question. If the LLM can't find the answer, it will make up one even if you asked it not to.
+We're using a fixed chunk size and overlap for simplicity. In a production system this can lead to suboptimal performance.
+We therefore recommend testing different chunk sizes and overlaps to find the right balance for your use case.
 
 You can learn more about testing RAG systems in [the book](https://leanpub.com/effective-llm-applications-with-semantic-kernel/)
-</Aside>
 
+It's also good to keep in mind that there are other chunking strategies available. Depending on how advanced you're going
+you may need to build a chunking mechanism yourself. The default, however, is good enough in many cases.
+</Aside>
 
 ### Lab 2: Generating Embeddings
 
@@ -196,8 +125,6 @@ trained to understand language.
 > Texts with similar meanings get **similar embeddings**, even if they use 
 > different words.
 
----
-
 #### Embeddings vs. Vectors
 
 It's common to hear the terms used interchangeably, but here's the difference:
@@ -215,7 +142,34 @@ So:
 Think of a vector as a format, and an embedding as meaningful content **in that
 format**.
 
-#### Exercise: Generating Embeddings
+#### Exercise: Configure the vector store
+
+To work with a vector store in Semantic Kernel, you need to configure it in the application.
+Since we're using Aspire to orchestrate the various moving parts in the application we can 
+configure the vector store with just a few lines of code.
+
+<Steps>
+1. Add the Qdrant connector to the `apps/InfoSupport.AgentWorkshop.Indexer` project.
+
+    ```bash
+    dotnet add package Microsoft.SemanticKernel.Connectors.Qdrant --prerelease
+    dotnet add package Aspire.Qdrant.Client
+    ```
+
+2. Configure the vector store in the `Program.cs` file.
+
+    ```csharp
+    builder.Services.AddKernel()
+        .AddAzureOpenAITextEmbeddingGeneration(
+            builder.Configuration["LanguageModel:TextEmbeddingDeploymentName"]!);
+
+    builder.Services.AddQdrantVectorStore();
+    ```
+</Steps>
+
+With the vector store configured, we can start storing data in it.
+
+#### Exercise: Generating and storing embeddings
 
 [There are many vector databases you can use with Semantic Kernel][VECTOR_DATABASES]. 
 They all follow a similar pattern: You can usually store a record identified by a 
@@ -232,7 +186,7 @@ processing such as Entity Framework Core although the database may support it.
 
 <Steps>
 
-1. Add a new file `TextUnit.cs` to the project and add a new class `TextUnit` in it.
+1. Add a new file `TextUnit.cs` to the directory `apps/indexer/InfoSupport.AgentWorkshop.Indexer/Models` and add a new class `TextUnit` in it.
 
     ```csharp
     using Microsoft.Extensions.VectorData;
@@ -279,184 +233,33 @@ processing such as Entity Framework Core although the database may support it.
     requires extra maintenance and may not add additional value in terms of
     higher-quality search results.
 
-4. Map the chunks to the data model.
+4. Map the chunks to the data model. Modify the method `UpsertChunkAsync` in the `ContentIndexerService` class.
+   Add the following code to it:
 
-    Now that we have the data model, we can map the chunks to the data model.
+   ```csharp
+   var embeddingVector = await embeddingGenerationService.GenerateEmbeddingAsync(
+           chunk, cancellationToken: cancellationToken);
+       
+   var textUnit = new TextUnit
+   {
+       Content = chunk,
+       Embedding = embeddingVector,
+       Id = _currentIdentifier++,
+       OriginalFileName = fileName,
+   };
+   ```
+5. Ensure that the vector store collection exists. Add the following code to the end of the `UpsertChunkAsync` method:
 
-    ```csharp
-    foreach (var chunk in chunks)
-    {
-        var textUnit = new TextUnit
-        {
-            Content = chunk,
-            OriginalFileName = file,
-            Id = currentIdentifier++
-        };
-    }
-    ```
+   ```csharp
+   var collection = vectorStore.GetCollection<ulong, TextUnit>("content");
+   await collection.CreateCollectionIfNotExistsAsync(cancellationToken);
+   ```
 
-</Steps>
-
-#### Exercise: Embedding the chunks
-
-Embeddings are mathematical representations of text that
-capture the semantic meaning of the text. To create an embedding out of the chunks
-we must use an embedding model. These models are trained to understand language
-and create embeddings that can be used to represent the meaning of the text.
-
-<Steps>
-1. Add the kernel to the project. Modify the `Program.cs` file to add the kernel object.
-   Place this code before the line that searches for files in the `Content` directory.
+6. Save the text unit to the vector store. Add the following code to the end of the method `UpsertChunkAsync`.
 
     ```csharp
-    var kernelBuilder =  Kernel.CreateBuilder();
+    await collection.UpsertAsync(textUnit, cancellationToken);
     ```
-
-2. Add an embedding model to the kernel.
-The embedding model is used by semantic kernel to generate embeddings for the chunks.
-
-    ```csharp
-    using Microsoft.SemanticKernel;
-
-    var kernel = Kernel.CreateBuilder()
-        .AddAzureOpenAITextEmbeddingGeneration(
-            deploymentName: "MODEL_NAME",
-            endpoint: "ENDPOINT",
-            apiKey: "API_KEY"
-        )
-    .Build();
-    ```
-
-    <Aside type="tip" title="Use the API key from the e-mail we sent you">
-    Make sure you use the API key, endpoint and deployment name from the e-mail we sent you. 
-    </Aside>
-
-3. Obtain the text embedding service. Add the following code below the lines that initialize the kernel object.
-
-    ```csharp
-    var generationService = kernel.GetRequiredService<ITextEmbeddingGenerationService>();
-    ```
-
-4. Generate embeddings for the chunks. Add the following code to the end of the program.
-
-    ```csharp
-    foreach (var chunk in chunks)
-    {
-        var embedding = await generationService.GenerateEmbeddingAsync(chunk);
-
-        var textUnit = new TextUnit
-        {
-            Content = chunk,
-            Embedding = embedding,
-            OriginalFileName = file,
-            Id = currentIdentifier++
-        };
-    }
-    ```
-
-</Steps>
-
-### Lab 3: Storing Embeddings
-
-**Goal:** Store embeddings in a vector store for efficient retrieval and search.
-
-In this lab, you'll learn how to persist the embeddings we generated in Lab 2 into a vector store. 
-This is a crucial step in building RAG applications as it enables efficient semantic search and retrieval of relevant content.
-
-#### What is a Vector Store?
-
-A **vector store** is a specialized database designed to store and query vector embeddings efficiently. It enables:
-
-- **Fast similarity search**: Find documents with similar meaning
-- **Scalable storage**: Handle large volumes of embeddings
-- **Metadata management**: Store additional information with each embedding
-
-Vector databases play a crucial role in various applications that require similarity search,
-such as recommendation systems, content-based image retrieval, and personalized search.
-By taking advantage of their efficient indexing and searching techniques, vector databases
-enable faster and more accurate retrieval of unstructured data already represented as vectors,
-which can help put in front of users the most relevant results to their queries.
-
-In this lab, we'll:
-
-1. Set up a vector store (using Qdrant)
-2. Store our document chunks and their embeddings
-3. Implement basic search functionality
-
-#### Exercise: Setup the vector store
-
-We'll use Qdrant as our vector store. Qdrant is a vector similarity search engine that provides a
-production-ready service with a convenient API to store, search, and manage points (i.e. vectors)
-with an additional payload.
-
-<Steps>
-1. Create a docker-compose file to start a Qdrant instance.
-
-    ```yaml
-    services:
-        qdrant:
-            image: qdrant/qdrant:latest
-            restart: always
-            container_name: qdrant
-            ports:
-            - 6333:6333
-            - 6334:6334
-            expose:
-            - 6333
-            - 6334
-            - 6335
-            configs:
-            - source: qdrant_config
-              target: /qdrant/config/production.yaml
-            volumes:
-            - ./qdrant_data:/qdrant/storage
-
-    configs:
-        qdrant_config:
-            content: |
-            log_level: INFO
-          
-</Steps>
-
-#### Exercise: Store embeddings
-
-Semantic Kernel and .net provides an abstraction for interacting with Vector Stores and a list of out-of-the-box connectors that implement these abstractions. 
-Features include creating, listing and deleting collections of records, and uploading, retrieving and deleting records. 
-The abstraction makes it easy to experiment with a free or locally hosted Vector Store and then switch to a service when needing to scale up.
-
-All connector are available in the `Microsoft.Extensions.VectorData.Abstractions` namespace.
-Each vector store implementation is available in its own nuget package. For a list of known implementations
-see the [Out-of-the-box connectors page](https://learn.microsoft.com/en-us/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/?pivots=programming-language-csharp).
-
-<Steps>
-1. Add the Qdrant connector to the project.
-
-    ```bash
-    dotnet add package Microsoft.SemanticKernel.Connectors.Qdrant --prerelease
-    ```
-
-2. Create a Qdrant vector store client.
-
-    The Qdrant vector store client is available in the `Microsoft.SemanticKernel.Connectors.Qdrant` namespace.
-    Use the locally hosted Qdrant instance.
-
-    ```csharp
-    IVectorStore qdrantStore = new QdrantVectorStore(new QdrantClient("http://localhost"))
-    ```
-
-3. Create a collection in the vector store.
-
-    ```csharp
-    var collection = vectorStore.GetCollection<ulong, TextUnit>("content");
-    await collection.CreateCollectionIfNotExistsAsync();
-    ```
-
-4. Store the embeddings in the vector store.
-
-    ```csharp
-    await collection.UpsertAsync(textUnit);
-    ``` 
-
 </Steps>
 
 ## Summary and next steps
