@@ -515,13 +515,7 @@ var response = await chatCompletionService.GetChatMessageContentAsync(
 
 </details>
 
-
 What is left now is to start the application and see the results!
-
-## 📖 Running RAG in production - add different module for this???
-
-- TODO: Think of data protection
-- other stuff.
 
 ## 📚 References
 
@@ -532,25 +526,9 @@ What is left now is to start the application and see the results!
 
 ## 📖 Summary and next steps
 
-In this module, we explored three key aspects of building effective LLM applications:
+In this module we covered how to implement semantic search for the content we indexed in the previous module.
+We then learned the difference between semantic search in the context of a prompt and as part of a function where
+the agent can choose to use the search or answer the prompt directly.
 
-1. **Semantic Search Implementation**
-   - Learned how to integrate vector databases for context-aware responses
-   - Implemented question embedding and vector store search
-   - Combined search results into meaningful context
-
-2. **Prompt Design**
-   - Created structured prompt templates using Handlebars
-   - Integrated context and questions into prompts
-   - Optimized prompt parameters for better responses
-
-3. **RAG as a Plugin**
-   - Converted RAG functionality into a Semantic Kernel plugin
-   - Implemented text search with vector store integration
-   - Enabled automatic function calling through planning
-
-Next steps:
-- Consider data protection and security measures
-- Explore production deployment strategies
-- Experiment with different prompt templates and parameters
-- Test with various types of questions and contexts
+This marks the end of this workshop. If you're interested in learning more about Semantic Kernel, we recommend
+reading the book [Building Effective LLM-Based Applications with Semantic Kernel](https://leanpub.com/effective-llm-applications-with-semantic-kernel/)!
