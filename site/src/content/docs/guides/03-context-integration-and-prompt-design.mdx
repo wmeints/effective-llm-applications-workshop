@@ -131,41 +131,6 @@ The first step is to integrate the vector store into the shell application.
 
 </Steps>
 
-
-<details>
-<summary>💡 Solution</summary>
-
-```csharp
-public class QuestionAnsweringTool (
-    Kernel kernel, IVectorStore vectorStore,
-    ITextEmbeddingGenerationService embeddingService)
-{
-    public async Task<string> AnswerAsync(string question)
-    {
-        var questionEmbedding = await embeddingService.GenerateEmbeddingAsync(question);
-
-        var collection = vectorStore.GetCollection<ulong, TextUnit>("content");
-
-        var searchResponse = collection.SearchEmbeddingAsync(
-            vector: questionEmbedding,
-            top: 3
-        );
-
-        var fragments = new List<TextUnit>();
-
-        await foreach (var fragment in searchResponse)
-        {
-            fragments.Add(fragment.Record);
-        };
-    }
-}
-
-```
-
-</details>
-
----
-
 ## Lab 2: Prompt Design
 
 **Goal:** Learn how to design effective prompts to generate more accurate and 
@@ -321,57 +286,6 @@ function.
 
 </Steps>
 
----
-
-<details>
-<summary>💡 Solution</summary>
-
-```csharp
-public class QuestionAnsweringTool (
-    Kernel kernel, IVectorStore vectorStore,
-    ITextEmbeddingGenerationService embeddingService)
-{
-    public async Task<string> AnswerAsync(string question)
-    {
-        var questionEmbedding = await embeddingService.GenerateEmbeddingAsync(question);
-
-        var collection = vectorStore.GetCollection<ulong, TextUnit>("content");
-
-        var searchResponse = collection.SearchEmbeddingAsync(
-            vector: questionEmbedding,
-            top: 3
-        );
-
-        var fragments = new List<TextUnit>();
-
-        await foreach (var fragment in searchResponse)
-        {
-            fragments.Add(fragment.Record);
-        };
-
-        var template = File.ReadAllText("Prompts/answer_question.yaml");
-
-        var promptTemplate = kernel.CreateFunctionFromPrompt(
-            promptTemplate: template, 
-            promptTemplateFactory: new HandlebarsPromptTemplateFactory()
-        );
-
-        var response = await promptTemplate.InvokeAsync(
-            kernel,
-            new KernelArguments{
-                { "question", question },
-                { "fragments", fragments }
-            }
-        );
-
-        return response.GetValue<string>();
-    }
-}
-
-```
-
-</details>
-
 <Aside>
     This usage of the Kernel will trigger the semantic search for every question.
     Behavior that can occur is that you see answers that incorporate content that
@@ -380,8 +294,6 @@ public class QuestionAnsweringTool (
     To fix this, look at the [Lab 3](#lab-3-rag-as-a-function) where we'll see
     how to use RAG as a function.
 </Aside>
-
----
 
 ## Lab 3: RAG as a function
 
@@ -483,35 +395,6 @@ You're going to replace the previous implementation of RAG with a plugin.
     [Click here for more information about planning.](https://learn.microsoft.com/en-us/semantic-kernel/concepts/planning?pivots=programming-language-csharp#the-automatic-planning-loop)
 
 </Steps>
----
-
-<details>
-<summary>💡 Solution</summary>
-
-```csharp
-var textSearch = new VectorStoreTextSearch<TextUnit>(
-        collection, 
-        generationService
-    );
-
-var searchFunction = textSearch.CreateGetTextSearchResults();
-kernel.Plugins.AddFromFunctions("SearchPlugin", [searchFunction]);
-
-var settings = new AzureOpenAIPromptExecutionSettings
-{
-    FrequencyPenalty = 0.0,
-    PresencePenalty = 0.0,
-    FunctionChoiceBehavior = FunctionChoiceBehavior.Auto()
-};
-
-var response = await chatCompletionService.GetChatMessageContentAsync(
-    "Who is the writer of the book 'Building Effective LLM-Based Applications with Semantic Kernel'?",
-    settings,
-    kernel
-);
-```
-
-</details>
 
 What is left now is to start the application and see the results!
 
