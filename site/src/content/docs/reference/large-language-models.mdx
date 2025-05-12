@@ -1,0 +1,110 @@
+---
+title: Understanding Large Language Models
+---
+
+import { Aside } from "@astrojs/starlight/components";
+
+To build effective LLM-based applications, it's essential to understand some concepts of
+what a large language model is. The explanation below should help you with enough
+knowledge to get through the workshop. If you want to learn more, please refer to [the
+book](https://leanpub.com/effective-llm-applications-with-semantic-kernel/).
+
+## The basics of an LLM
+
+A large language model (LLM) is a deep neural network built to generate a text sequence
+based on an input text sequence. We call the input text sequence a prompt and the output
+sequence a response.
+
+When you want to generate output with an LLM, you need to give it a sequence of tokens.
+You can obtain these tokens by splitting the text into small chunks. These small chunks
+or tokens can be a delimiter, a small word, or part of a larger word. You only get one
+token as output from the model. If you want to produce a complete sentence, you will
+have to repeat the prediction process. This time, however, you input the original input
+sequence with the newly created output token to obtain the next token.
+
+<Aside>
+  This sequence of events where we predict a token and use that with the
+  original sequence to obtain the next token is why LLMs are slightly stupid.
+  They can only predict the next likely token!
+</Aside>
+
+An LLM has no internal state or notion of a conversation. So, while you think you're
+sending a single prompt to ChatGPT, you send the whole conversation over each time you
+ask a question.
+
+LLMs can typically process input and output sequences up to a maximum number of tokens.
+The limit for the number of tokens in the input and output is called the context window
+size. After a while, you'll reach the limit of the context window if you chat long
+enough with an LLM. Usually, the LLM-based application will decide what happens if you
+hit the context window limit. The application can choose to discard old messages or to
+summarize the conversation.
+
+## Making LLMs sound more human
+
+While using ChatGPT and other tools, entering the same prompt twice yields a different
+response. This variation in response is because of how LLMs predict the next likely
+token. They assign a probability to each of the possible tokens that come next in a
+sequence. They then use a sampling technique to randomly select a token from the set of
+tokens with the highest probability and return it. This sampling technique makes the LLM
+sound more human, but it's a statistical pattern-matching machine.
+
+You can control the randomness by setting a temperature for the model. A higher
+temperature makes the model behave more randomly, while a lower temperature makes it
+behave less randomly.
+
+### Training LLMs
+
+> 📝 **Exercise**: Understanding the LLM training process
+
+<Steps>
+
+1. Learn about the pretraining phase
+
+   - Data is collected from internet and books
+   - Words are masked in sentences
+   - Model learns to predict missing words
+   - This creates base language understanding
+
+2. Understand the fine-tuning phase
+
+   - Model learns specific tasks
+   - Examples: writing code, poems, reasoning
+   - This creates task-specific capabilities
+
+3. Review the key concepts
+   - Pretraining creates base understanding
+   - Fine-tuning adds specific abilities
+   - The combination enables powerful applications
+
+</Steps>
+
+After this step, the LLM is better at reasoning and completing simple tasks. However,
+it does require one more training step to be a reasonable artificial being. 3. The final step in the training process involves aligning the LLM with preferred
+language responses. In this step, we teach the LLM not to be racist and to follow a
+specific writing style. After this step, the LLM is ready to be used in production.
+
+### Calling tools with LLMs
+
+Many LLMs can call functions if you provide them with the necessary metadata. Tool
+calling works because they added the functionality in the post-training step of the
+training process. It works like this:
+
+1. You invoke the LLM with your prompt and tools. Each tool needs to have a name, description, and a set of parameter descriptions.
+2. When the LLM detects that it should call one of your tools, you'll get a `tool_call` response. You need to handle this response.
+3. When you get a `tool_call` response, you need to call the tool and provide the result as an extra chat message to the LLM.
+4. The LLM uses the tool output to generate a final response.
+
+Tools are a powerful concept we'll use in this workshop to build our agent and give it
+access to content search. While search is one of the most used tools in the toolbox,
+it's not the only kind of tool that an LLM can use.
+
+You can provide the LLM with tools that look up information and tools that manipulate
+something in the environment like switching on a light or sending an email. There's no
+limit to what you can do with tools.
+
+<Aside>
+  **Despite what we told you, there is somewhat of a limit to what you can do
+  with tools** You shouldn't provide your agent with 100 tools because it can't
+  distinguish between that many tools. Also, don't add too many parameters to
+  your tool because that doesn't work either.
+</Aside>
