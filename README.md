@@ -25,7 +25,8 @@ This workshop is designed for:
 - Technical architects designing LLM-powered solutions
 - Developers who learn best through hands-on implementation rather than theory alone
 
-**Important** The course materials focus on C# for now. We'll add detailed labs for Python and Java at a later date!
+**Important** The course materials focus on C# for now. We'll add detailed labs for
+Python and Java at a later date!
 
 ## Major Learning Goals
 
@@ -56,9 +57,8 @@ The first module will be more theoretical in nature while the other modules focu
 | Time      | Module                              | Description                                                           |
 | --------- | ----------------------------------- | --------------------------------------------------------------------- |
 | 0:00-0:45 | Fundamentals & Environment Setup    | Overview of LLMS, RAG architecture and configuring Semantic Kernel    |
-| 0:45-1:15 | Document Processing & Embeddings    | Implementing text splitting, embedding generation, and vector storage |
-| 1:15-2:00 | Retrieval Implementation            | Building semantic search functionality with relevance ranking         |
-| 2:00-2:45 | Context Integration & Prompt Design | Creating prompts that effectively use retrieved information           |
+| 0:45-1:30 | Document Processing & Embeddings    | Implementing text splitting, embedding generation, and vector storage |
+| 1:30-2:45 | Context Integration & Prompt Design | Creating prompts that effectively use retrieved information           |
 | 2:45-3:00 | Q&A and Next Steps                  | Discussion of advanced techniques and resources for further learning  |
 
 Each module includes:
