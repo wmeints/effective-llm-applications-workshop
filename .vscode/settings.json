@@ -9,5 +9,6 @@
             "strings": "off",
             "other": "off"
         }
-    }
+    },
+    "editor.rulers": [80, 120]
 }
