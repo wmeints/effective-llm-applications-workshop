@@ -14,6 +14,7 @@ external sources.
 
 When considering plugins for Retrieval Augmented Generation (RAG), you should ask 
 yourself two questions:
+
 - How will you (or your AI agent) "search" for the required data? Do you need 
   semantic search or classic search?
 - Do you already know the data the AI agent needs ahead of time (pre-fetched data), 
@@ -23,12 +24,12 @@ yourself two questions:
 
 In this module, we'll focus on searching the required data.
 
-## 🧪 Lab 1: Implement semantic search
+## Lab 1: Implement semantic search
 
 **Goal:** Learn how to integrate context into our prompts and use the vector 
 database to generate more accurate and relevant responses.
 
-### 👀 Semantic search
+### Semantic search
 
 Semantic search utilizes vector databases to understand and retrieve information 
 based on the meaning and context of the query rather than just matching keywords. 
@@ -50,14 +51,11 @@ then use the vector database to find the most relevant chunks.
 
 We'll use the same `embeddings` and `vectorStore` from the previous lab.
 
-### 🧪 Hands-on Lab: Integrating Context
+### Exercise: Integrating Context
 
 In this lab, we'll use the shell application that is present in the 
 `labs/lab-01/starter` folder. Make sure you have the project locally and you can 
 run it.
-
-
-> 📝 **Exercise**: Integrate the vector store into the shell application
 
 The first step is to integrate the vector store into the shell application.
 
@@ -168,7 +166,7 @@ public class QuestionAnsweringTool (
 
 ---
 
-## 🧪 Lab 2: Prompt Design
+## Lab 2: Prompt Design
 
 **Goal:** Learn how to design effective prompts to generate more accurate and 
 relevant responses.
@@ -189,7 +187,7 @@ how to incorporate system messages, user messages, and function results into our
 prompts. You'll also discover how to use prompt variables and how to chain 
 multiple prompts together for complex tasks.
 
-### 🔍 What is a Prompt?
+### What is a Prompt?
 
 A prompt is a structured input that guides an AI model's behavior and output. In 
 Semantic Kernel, prompts are more than just text - they're powerful tools that 
@@ -210,7 +208,7 @@ Think of a prompt as a conversation blueprint that helps the AI understand:
 - What information is available
 - What format the response should take
 
-### 🧪 Hands-on Lab: Prompt Design
+### Exercise: Prompt Design
 
 In this lab, we'll create a prompt template that uses the `ChatCompletion`
 function.
@@ -385,7 +383,7 @@ public class QuestionAnsweringTool (
 
 ---
 
-## 🧪 Lab 3: RAG as a function
+## Lab 3: RAG as a function
 
 **Goal:** Learn how to use RAG as a function.
 
@@ -408,14 +406,14 @@ There are typically two different types of functions that live under a plugin:
 
 This lab will focus on data retrieval functions.
 
-### 🔍 Function calling
+### Function calling
 
 Behind the scenes, Semantic Kernel leverages function calling, a native feature of most of the latest LLMs to allow LLMs, 
 to perform planning and to invoke your APIs. With function calling, LLMs can request (i.e., call) a particular function. 
 Semantic Kernel then marshals the request to the appropriate function in your codebase and returns the results back to the
 LLM so the LLM can generate a final response.
 
-### 🧪 Hands-on Lab: RAG as a plugin
+### Exercise: RAG as a plugin
 
 In this lab, we'll learn how to implement the semantic search we did in the previous lab as a plugin.
 You're going to replace the previous implementation of RAG with a plugin.
@@ -517,14 +515,14 @@ var response = await chatCompletionService.GetChatMessageContentAsync(
 
 What is left now is to start the application and see the results!
 
-## 📚 References
+## References
 
 - [Vector search](https://learn.microsoft.com/en-us/semantic-kernel/concepts/vector-store-connectors/vector-search?pivots=programming-language-csharp)
 - [Prompt template syntax](https://learn.microsoft.com/en-us/semantic-kernel/concepts/prompts/prompt-template-syntax)
 - [Handlebars prompt template](https://learn.microsoft.com/en-us/semantic-kernel/concepts/prompts/handlebars-prompt-templates?pivots=programming-language-csharp)
 - [Semantic kernel plugins](https://learn.microsoft.com/en-us/semantic-kernel/concepts/plugins/?pivots=programming-language-csharp)
 
-## 📖 Summary and next steps
+## Summary and next steps
 
 In this module we covered how to implement semantic search for the content we indexed in the previous module.
 We then learned the difference between semantic search in the context of a prompt and as part of a function where
