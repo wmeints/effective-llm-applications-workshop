@@ -53,22 +53,22 @@ We'll use the same `embeddings` and `vectorStore` from the previous lab.
 
 ### Exercise: Integrating Context
 
-In this lab, we'll use the shell application that is present in the 
-`labs/lab-01/starter` folder. Make sure you have the project locally and you can 
-run it.
+Make sure to copy the starter code from 
+[code/module-03](https://github.com/wmeints/effective-llm-applications-workshop/tree/code/module-03) folder. 
+You can also continue working on the files from the previous module.
 
-The first step is to integrate the vector store into the shell application.
+The first step is to integrate the vector store into the `apps/chat/InfoSupport.AgentWorkshop.Chat` application. 
 
 <Steps>
-1.  Create a new Question answering class
-
-    This class will be used to generate a response based on the question.
+1.  Create a new file `apps/chat/InfoSupport.AgentWorkshop.Chat/Tools/QuestionAnsweringTool.cs`. Add the following
+    code to it.
 
     ```csharp
     public class QuestionAnsweringTool(
         Kernel kernel, IVectorStore vectorStore,
         ITextEmbeddingGenerationService embeddingGenerator)
     {
+        [KernelFunction("search_content")]
         public async Task<string> AnswerAsync(string question)
         {
             //Content for the method
@@ -76,12 +76,8 @@ The first step is to integrate the vector store into the shell application.
     }
     ```
 
-    This class has the following dependencies:  
-    - `Kernel`: The kernel instance.
-    - `IVectorStore`: The vector store instance.
-    - `ITextEmbeddingGenerationService`: The embedding generation service.
-
-2.  Embed the question
+2.  Create an embedding vector for the question. Modify the `AnswerAsync` method by adding
+    the following code to it:
 
     ```csharp
     var questionEmbedding = await embeddingGenerator.GenerateEmbeddingAsync(question);
@@ -97,7 +93,7 @@ The first step is to integrate the vector store into the shell application.
 3. Search the vector store
 
     Now that we have the embedding, we can search the vector store for the most
-    relevant chunks.
+    relevant chunks. Add the following code to the end of the `AnswerAsync` method.
 
     ```csharp
     var collection = vectorStore.GetCollection<ulong, TextUnit>("Content");
