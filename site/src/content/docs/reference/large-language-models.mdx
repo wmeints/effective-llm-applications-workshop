@@ -2,14 +2,14 @@
 title: Understanding Large Language Models
 ---
 
-import { Aside } from "@astrojs/starlight/components";
+import { Aside, Steps } from "@astrojs/starlight/components";
 
 To build effective LLM-based applications, it's essential to understand some concepts of
 what a large language model is. The explanation below should help you with enough
 knowledge to get through the workshop. If you want to learn more, please refer to [the
 book](https://leanpub.com/effective-llm-applications-with-semantic-kernel/).
 
-## The basics of an LLM
+### The basics of an LLM
 
 A large language model (LLM) is a deep neural network built to generate a text sequence
 based on an input text sequence. We call the input text sequence a prompt and the output
@@ -22,10 +22,10 @@ token as output from the model. If you want to produce a complete sentence, you 
 have to repeat the prediction process. This time, however, you input the original input
 sequence with the newly created output token to obtain the next token.
 
-<Aside>
-  This sequence of events where we predict a token and use that with the
-  original sequence to obtain the next token is why LLMs are slightly stupid.
-  They can only predict the next likely token!
+<Aside type="note" title="LLMs only predict the next output token">
+This sequence of events where we predict a token and use that with the original sequence
+obtain the next token is why LLMs are slightly stupid. They can only predict the next
+likely token!
 </Aside>
 
 An LLM has no internal state or notion of a conversation. So, while you think you're
@@ -39,7 +39,7 @@ enough with an LLM. Usually, the LLM-based application will decide what happens 
 hit the context window limit. The application can choose to discard old messages or to
 summarize the conversation.
 
-## Making LLMs sound more human
+### Making LLMs sound more human
 
 While using ChatGPT and other tools, entering the same prompt twice yields a different
 response. This variation in response is because of how LLMs predict the next likely
@@ -54,34 +54,22 @@ behave less randomly.
 
 ### Training LLMs
 
-> 📝 **Exercise**: Understanding the LLM training process
+LLMs are special because they're trained on a massive amount of data scraped from the
+internet and books. The training process involves three steps that are important to
+understand so you have a good grasp of the power of an LLM:
 
-<Steps>
-
-1. Learn about the pretraining phase
-
-   - Data is collected from internet and books
-   - Words are masked in sentences
-   - Model learns to predict missing words
-   - This creates base language understanding
-
-2. Understand the fine-tuning phase
-
-   - Model learns specific tasks
-   - Examples: writing code, poems, reasoning
-   - This creates task-specific capabilities
-
-3. Review the key concepts
-   - Pretraining creates base understanding
-   - Fine-tuning adds specific abilities
-   - The combination enables powerful applications
-
-</Steps>
-
-After this step, the LLM is better at reasoning and completing simple tasks. However,
-it does require one more training step to be a reasonable artificial being. 3. The final step in the training process involves aligning the LLM with preferred
-language responses. In this step, we teach the LLM not to be racist and to follow a
-specific writing style. After this step, the LLM is ready to be used in production.
+1. First, we take sentences from the training dataset and hide one word. The LLM is then
+   asked to predict the missing word. This step is called pretraining the model. After
+   this step, it knows how to produce sequences of text.
+2. Next, we teach the LLM how to perform various tasks like writing code, poems, TODO
+   lists, or following reasoning tasks. This step is called the post-training step.
+   After this step, the LLM is better at reasoning and completing simple tasks. However,
+   it does require one more training step to be a reasonable artificial being.
+3. The final step in the training process involves aligning the LLM with preferred
+   language responses. In this step, we teach the LLM not to be racist and to follow a
+   specific writing style. After this step, the LLM is ready to be used in production.
+   The alignment step uses an algorithm called reinforcement learning with human
+   feedback.
 
 ### Calling tools with LLMs
 
@@ -102,9 +90,8 @@ You can provide the LLM with tools that look up information and tools that manip
 something in the environment like switching on a light or sending an email. There's no
 limit to what you can do with tools.
 
-<Aside>
-  **Despite what we told you, there is somewhat of a limit to what you can do
-  with tools** You shouldn't provide your agent with 100 tools because it can't
-  distinguish between that many tools. Also, don't add too many parameters to
-  your tool because that doesn't work either.
+<Aside type="note" title="Limitations of tools">
+You shouldn't provide your agent with 100 tools because it can't distinguish between
+that many tools. Also, don't add too many parameters to your tool because that doesn't
+work either.
 </Aside>

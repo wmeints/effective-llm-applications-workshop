@@ -79,11 +79,14 @@ terminal to configure the connection string for the language model:
        .AddAzureOpenAITextEmbeddingGeneration(builder.Configuration["LanguageModel:TextEmbeddingDeploymentName"]!);
    ```
 
-   <Aside>
-   We're using Aspire to configure the application. The call to `AddAzureOpenAIClient` uses a connection string that we configured in the application host project.
-   The Aspire application host project automatically injects this connection string in the correct places so this code works as expected.
+   <Aside type="tip" title="We use Aspire to host the application">
+   We use Aspire to orchestrate the different parts of the application. This saves us a lot of time.
 
-   If you're interested in learning more about the reasons why we used Aspire, make sure to read the [reference documentation](/reference/why-use-aspire)
+   The call to `AddAzureOpenAIClient` uses a connection string that we configured in the application host project.
+   The Aspire application host project automatically injects this connection string in 
+   the correct places based on how you configured the Azure OpenAI service resource in the application host.
+   
+   If you're interested in learning more about the reasons why we use Aspire, make sure to read the [reference documentation](/reference/why-use-aspire)
    </Aside>
 </Steps>
 
