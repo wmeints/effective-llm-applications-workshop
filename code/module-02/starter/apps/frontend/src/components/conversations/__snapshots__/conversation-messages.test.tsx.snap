@@ -1,0 +1,51 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`ConversationMessages > renders correctly 1`] = `
+<div>
+  <div
+    class="flex flex-1 flex-col h-full overflow-y-auto"
+  >
+    <div
+      class="max-w-5xl mx-auto w-5xl"
+    >
+      <div
+        class="mb-6"
+      >
+        <div
+          class="p-4 rounded-lg bg-white"
+        >
+          <div
+            class="prose prose-sm max-w-none"
+          >
+            <p
+              class="mb-4 last:mb-0"
+              node="[object Object]"
+            >
+              Hello, how can I help you?
+            </p>
+          </div>
+        </div>
+      </div>
+      <div
+        class="mb-6"
+      >
+        <div
+          class="p-4 rounded-lg bg-gray-100 ml-12"
+        >
+          <div
+            class="prose prose-sm max-w-none"
+          >
+            <p
+              class="mb-4 last:mb-0"
+              node="[object Object]"
+            >
+              I have a question about React
+            </p>
+          </div>
+        </div>
+      </div>
+      <div />
+    </div>
+  </div>
+</div>
+`;

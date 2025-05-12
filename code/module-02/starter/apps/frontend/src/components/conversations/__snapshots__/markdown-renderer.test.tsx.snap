@@ -1,0 +1,110 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`MarkdownRenderer > renders empty content without crashing 1`] = `
+<div>
+  <div
+    class="prose prose-sm max-w-none"
+  />
+</div>
+`;
+
+exports[`MarkdownRenderer > renders markdown content correctly 1`] = `
+<div>
+  <div
+    class="prose prose-sm max-w-none"
+  >
+    <h1>
+      Heading 1
+    </h1>
+    
+
+    <h2>
+      Heading 2
+    </h2>
+    
+
+    <p
+      class="mb-4 last:mb-0"
+      node="[object Object]"
+    >
+      This is a 
+      <span
+        class="font-semibold"
+        node="[object Object]"
+      >
+        bold
+      </span>
+       text with a 
+      <a
+        href="https://example.com"
+      >
+        link
+      </a>
+      .
+    </p>
+    
+
+    <ol
+      class="space-y-2 list-decimal pl-6"
+      node="[object Object]"
+    >
+      
+
+      <li
+        class="my-1"
+        node="[object Object]"
+      >
+        First item
+      </li>
+      
+
+      <li
+        class="my-1"
+        node="[object Object]"
+      >
+        Second item
+        
+
+        <ul>
+          
+
+          <li
+            class="my-1"
+            node="[object Object]"
+          >
+            Nested bullet
+          </li>
+          
+
+          <li
+            class="my-1"
+            node="[object Object]"
+          >
+            Another nested bullet
+          </li>
+          
+
+        </ul>
+        
+
+      </li>
+      
+
+    </ol>
+    
+
+    <blockquote>
+      
+
+      <p
+        class="mb-4 last:mb-0"
+        node="[object Object]"
+      >
+        This is a blockquote
+      </p>
+      
+
+    </blockquote>
+  </div>
+</div>
+`;

@@ -1,0 +1,63 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`StartConversation > should match snapshot 1`] = `
+<div>
+  <div
+    class="w-5xl space-y-4"
+  >
+    <h2
+      class="text-2xl font-semibold"
+    >
+      How can I help you today?
+    </h2>
+    <form
+      class="relative rounded-md border shadow-sm mb-4 max-w-5xl mx-auto w-5xl"
+    >
+      <div
+        class="grid gap-2"
+        data-slot="form-item"
+      >
+        <textarea
+          aria-describedby="«r0»-form-item-description"
+          aria-invalid="false"
+          class="border-input placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 flex field-sizing-content min-h-16 w-full rounded-md bg-transparent text-base shadow-xs transition-[color,box-shadow] outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm resize-none h-14 px-4 py-3 pr-12 focus-visible:ring-0 focus-visible:ring-offset-0 border-0"
+          data-slot="form-control"
+          id="«r0»-form-item"
+          name="message"
+          placeholder="Type your prompt here..."
+        />
+      </div>
+      <button
+        class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 size-9 absolute bottom-2 right-2"
+        data-slot="button"
+        type="submit"
+      >
+        <svg
+          class="lucide lucide-send h-4 w-4"
+          fill="none"
+          height="24"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"
+          />
+          <path
+            d="m21.854 2.147-10.94 10.939"
+          />
+        </svg>
+        <span
+          class="sr-only"
+        >
+          Send message
+        </span>
+      </button>
+    </form>
+  </div>
+</div>
+`;

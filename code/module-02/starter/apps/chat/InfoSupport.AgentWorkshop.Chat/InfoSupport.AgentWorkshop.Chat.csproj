@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <NoWarn>SKEXP0110;SKEXP0010</NoWarn>
+      <UserSecretsId>6da2e1ab-99c1-4a12-806f-ed3ec38a6d46</UserSecretsId>
+  </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Aspire.Azure.AI.OpenAI" Version="9.2.0-preview.1.25209.2" />
+        <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.2.0" />
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.4" />
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.4" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.4">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.4" />
+        <PackageReference Include="Microsoft.SemanticKernel" Version="1.49.0" />
+        <PackageReference Include="Microsoft.SemanticKernel.Agents.Core" Version="1.49.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore.ReDoc" Version="8.1.1" />
+        <PackageReference Include="System.Text.Json" Version="9.0.4" />
+        
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\..\hosting\InfoSupport.AgentWorkshop.ServiceDefaults\InfoSupport.AgentWorkshop.ServiceDefaults.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Include="instructions.txt" />
+    </ItemGroup>
+
+</Project>
