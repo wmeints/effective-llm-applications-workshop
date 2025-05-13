@@ -13,7 +13,7 @@ public static class EmbeddedResource
     /// <exception cref="InvalidOperationException">Gets thrown when the resource couldn't be found.</exception>
     public static string Read(string name)
     {
-        var resourceIdentifier = $"InfoSupport.Ricardo.Chat.{name}";
+        var resourceIdentifier = $"InfoSupport.AgentWorkshop.Chat.{name}";
         using var stream = typeof(EmbeddedResource).Assembly.GetManifestResourceStream(resourceIdentifier);
 
         if (stream == null)
