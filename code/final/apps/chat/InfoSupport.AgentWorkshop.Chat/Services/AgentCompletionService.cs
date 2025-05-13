@@ -50,7 +50,7 @@ public class AgentCompletionService(Kernel kernel, ApplicationDbContext applicat
         }
 
         var chatHistory = BuildChatHistory(conversation);
-        ChatHistoryAgentThread? thread = thread = new ChatHistoryAgentThread(chatHistory);
+        ChatHistoryAgentThread? thread = new ChatHistoryAgentThread(chatHistory);
 
         // Record the user message with the current conversation.
         conversation.AppendUserMessage(request.Prompt);
