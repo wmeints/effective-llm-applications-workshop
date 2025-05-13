@@ -149,14 +149,20 @@ Since we're using Aspire to orchestrate the various moving parts in the applicat
 configure the vector store with just a few lines of code.
 
 <Steps>
-1. Add the Qdrant connector to the `apps/InfoSupport.AgentWorkshop.Indexer` project.
+1.  Add the Qdrant connector to the `apps/indexer/InfoSupport.AgentWorkshop.Indexer` project.
 
     ```bash
     dotnet add package Microsoft.SemanticKernel.Connectors.Qdrant --prerelease
     dotnet add package Aspire.Qdrant.Client
     ```
 
-2. Configure the vector store in the `Program.cs` file.
+2.  Add the following statement to `apps/indexer/InfoSupport.AgentWorkshop.Indexer/Program.cs` after the line where the AzureOpenAI client is added.
+
+    ```csharp
+    builder.AddQdrantClient("qdrant");
+    ```
+
+3. Configure the vector store in the `Program.cs` file.
 
     ```csharp
     builder.Services.AddKernel()
