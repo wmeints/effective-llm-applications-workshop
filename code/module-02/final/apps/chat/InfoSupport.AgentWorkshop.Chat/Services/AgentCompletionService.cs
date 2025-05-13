@@ -23,11 +23,7 @@ public class AgentCompletionService(Kernel kernel, ApplicationDbContext applicat
     {
         Name = "Mike",
         Instructions = EmbeddedResource.Read("instructions.txt"),
-        Kernel = kernel,
-        Arguments = new KernelArguments(new AzureOpenAIPromptExecutionSettings
-        {
-            FunctionChoiceBehavior = FunctionChoiceBehavior.Auto()
-        })
+        Kernel = kernel
     };
 
     /// <summary>
