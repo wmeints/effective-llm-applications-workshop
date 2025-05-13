@@ -53,7 +53,7 @@ public class AgentCompletionService(Kernel kernel, ApplicationDbContext applicat
         // on the ApplicationDbContext instance to store the conversation in the
         // database.
 
-        throw new NotImplementedException();
+        yield break;
     }
 
     private ChatHistory BuildChatHistory(Conversation conversation)
