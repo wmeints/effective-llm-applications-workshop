@@ -48,7 +48,7 @@ public class ContentIndexerService(
     {
         var embeddingVector = await embeddingGenerationService.GenerateEmbeddingAsync(
             chunk, cancellationToken: cancellationToken);
-        
+
         var textUnit = new TextUnit
         {
             Content = chunk,
@@ -56,8 +56,10 @@ public class ContentIndexerService(
             Id = _currentIdentifier++,
             OriginalFileName = fileName,
         };
-        
+
         var collection = vectorStore.GetCollection<ulong, TextUnit>("content");
         await collection.CreateCollectionIfNotExistsAsync(cancellationToken);
+
+        await collection.UpsertAsync(textUnit);
     }
 }
