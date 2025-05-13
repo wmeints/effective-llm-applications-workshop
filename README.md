@@ -4,6 +4,13 @@ Welcome to the source repository for the workshop "Building Effective LLM-Based
 Applications with Semantic Kernel". In this workshop we teach people how to build
 LLM-based applications with Semantic Kernel.
 
+---
+**NOTICE**  
+If you're here because you're attending the workshop. Go straight to the website please!
+Website: https://wmeints.github.io/effective-llm-applications-workshop
+
+---
+
 ## Why this workshop
 
 This hands-on workshop transforms the theoretical knowledge from the book 
@@ -93,7 +100,7 @@ To prepare for facilitating this workshop:
 
 ## Getting Started
 
-1. Navigate to the workshop website: https://wmeints.github.com/effective-llm-applications-workshop
+1. Navigate to the workshop website: https://wmeints.github.io/effective-llm-applications-workshop
 2. Follow the setup instructions on the website.
 
 For questions or issues, please create an issue in the [GitHub repository](https://github.com/wmeints/effective-llm-applications/).
