@@ -211,7 +211,7 @@ processing such as Entity Framework Core although the database may support it.
     [VectorStoreRecordData]
     public string OriginalFileName { get; set; } = default!;
 
-    [VectorStoreRecordData(IsFullTextSearchable = true)]
+    [VectorStoreRecordData(IsFullTextIndexed = true)]
     public string Content { get; set; } = default!;
     ```
 
