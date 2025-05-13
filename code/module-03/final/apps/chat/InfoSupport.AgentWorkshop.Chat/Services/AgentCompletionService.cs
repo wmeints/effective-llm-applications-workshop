@@ -47,7 +47,7 @@ public class AgentCompletionService(Kernel kernel, ApplicationDbContext applicat
         }
 
         var chatHistory = BuildChatHistory(conversation);
-        ChatHistoryAgentThread? thread = thread = new ChatHistoryAgentThread(chatHistory);
+        ChatHistoryAgentThread? thread = new ChatHistoryAgentThread(chatHistory);
 
         // Record the user message with the current conversation.
         conversation.AppendUserMessage(request.Prompt);
@@ -77,9 +77,9 @@ public class AgentCompletionService(Kernel kernel, ApplicationDbContext applicat
         var contentCollection = vectorStore.GetCollection<ulong, TextUnit>("Content");
         var embeddingGenerator = kernel.GetRequiredService<ITextEmbeddingGenerationService>();
         var textSearch = new VectorStoreTextSearch<TextUnit>(contentCollection, embeddingGenerator);
-        
+
         kernel.Plugins.Add(textSearch.CreateWithGetTextSearchResults("BookContent"));
-        
+
         var agent = new ChatCompletionAgent()
         {
             Name = "Mike",
@@ -90,7 +90,7 @@ public class AgentCompletionService(Kernel kernel, ApplicationDbContext applicat
                 FunctionChoiceBehavior = FunctionChoiceBehavior.Auto()
             })
         };
-        
+
         return agent;
     }
 
