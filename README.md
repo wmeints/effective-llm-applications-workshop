@@ -58,7 +58,7 @@ The first module will be more theoretical in nature while the other modules focu
 | --------- | ----------------------------------- | --------------------------------------------------------------------- |
 | 0:00-0:45 | Fundamentals & Environment Setup    | Overview of LLMS, RAG architecture and configuring Semantic Kernel    |
 | 0:45-1:30 | Document Processing & Embeddings    | Implementing text splitting, embedding generation, and vector storage |
-| 1:30-2:45 | Context Integration & Prompt Design | Creating prompts that effectively use retrieved information           |
+| 1:30-2:45 | Context Integration                 | Creating prompts that effectively use retrieved information           |
 | 2:45-3:00 | Q&A and Next Steps                  | Discussion of advanced techniques and resources for further learning  |
 
 Each module includes:

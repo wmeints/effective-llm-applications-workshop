@@ -36,7 +36,7 @@ To set up and run the project locally using the `InfoSupport.AgentWorkshop.AppHo
 
 4. **Configure Environment**:
 
-   - Update `appsettings.json` or `appsettings.Development.json` in the `hosting/InfoSupport.AgentWorkshop.AppHost` directory with any required configurations.
+   - Use `dotnet user-secrets set <Key> <Value>` in the `hosting/InfoSupport.AgentWorkshop.AppHost` directory to configure the environment secrets.
    - Ensure the `DOTNET_ENVIRONMENT` variable is set to `Development` for local development.
 
    | Required setting                | Value                        | Description                                                                                             |

@@ -1,7 +1,7 @@
-# Final solution for the workshop
+# Starter for module 1
 
-This directory contains the final solution for the workshop. We use this version of the agent as our building site for the rest of the workshop.
-Feel free to copy this code, but use at your own risk!
+This directory contains the final solution for module 1 of the workshop.
+You can use this as a reference for the labs in the module "Introduction & environment setup"
 
 ## Setup and Run the Project Locally
 
@@ -36,7 +36,7 @@ To set up and run the project locally using the `InfoSupport.AgentWorkshop.AppHo
 
 4. **Configure Environment**:
 
-   - Update `appsettings.json` or `appsettings.Development.json` in the `hosting/InfoSupport.AgentWorkshop.AppHost` directory with any required configurations.
+   - Use `dotnet user-secrets set <Key> <Value>` in the `hosting/InfoSupport.AgentWorkshop.AppHost` directory to configure the environment secrets.
    - Ensure the `DOTNET_ENVIRONMENT` variable is set to `Development` for local development.
 
    | Required setting                | Value                        | Description                                                                                             |

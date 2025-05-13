@@ -1,7 +1,7 @@
-# Starter for module 1
+# Starter for module 3
 
-This directory contains the starter solution for module 1 of the workshop.
-You can use this as the starting point for the labs in the module "Introduction & environment setup"
+This directory contains the starter solution for module 3 of the workshop.
+You can use this as the starting point for the labs in the module "Context Integration"
 
 ## Setup and Run the Project Locally
 
