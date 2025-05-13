@@ -230,6 +230,16 @@ RAG with a plugin.
 What is left now is to start the application and see the results. You can run the application from `hosting/InfoSupport.AgentWorkshop.AppHost`.
 After the application host is started, you can go to http://localhost:3000/ to view the frontend and start chatting.
 
+<Aside type="tip" title="Check the tracing in the Aspire dashboard">
+You may be wondering, is the agent using the semantic search tool or not? You can't really tell from the frontend.
+But luckily, there are other ways of verifying that the agent works.
+
+Semantic Kernel comes with tracing built into it. You can see the traces in the Aspire dashboard. Make sure to look for the dashboard URL in the terminal
+after you've run `dotnet run` in `apps/hosting/InfoSupport.AgentWorkshop.AppHost`. It will show an URL with a token querystring argument.
+
+The traces are located under the `Traces` module in the sidebar of the dashboard.
+</Aside>
+
 ## Summary and next steps
 
 In this module we covered how to implement semantic search for the content we indexed in the previous module.
