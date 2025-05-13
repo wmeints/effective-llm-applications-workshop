@@ -5,8 +5,8 @@ import { SidebarProvider } from "@/components/ui/sidebar"
 import { AppStoreProvider } from "@/providers/app-store-provider"
 
 export const metadata: Metadata = {
-    title: "Ricardo",
-    description: "A digital assistant for Info Support",
+    title: "Mike - Info Support Agent Workshop",
+    description: "Your friendly assistant teaching you how to use Semantic Kernel",
 }
 
 export default function RootLayout({
