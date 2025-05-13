@@ -11,6 +11,7 @@ var languageModel = builder.AddConnectionString("languagemodel");
 
 var chatService = builder.AddProject<InfoSupport_AgentWorkshop_Chat>("chatservice")
     .WithReference(chatDatabase)
+    .WithReference(qdrantServer)
     .WithReference(languageModel)
     .WaitFor(chatDatabase);
 
