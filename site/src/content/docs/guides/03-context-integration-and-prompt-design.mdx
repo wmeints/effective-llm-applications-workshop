@@ -4,32 +4,17 @@ title: Context integration and prompt design
 
 import { Aside, Steps } from "@astrojs/starlight/components";
 
-In this module, we'll explore how to integrate context into our prompts and design 
-effective prompts.
+In this module, we'll explore how to use the information we processed in the
+previous module as extra context information for the agent.
 
-Often, your AI agents must retrieve data from external sources to generate grounded 
-responses. Without this additional context, your AI agents may hallucinate or provide 
-incorrect information. To address this, you can use plugins to retrieve data from 
-external sources.
+The pattern we're going to use is called **Retrieval Augmented Generation 
+(RAG)**. The agent retrieves extra information based on the prompts
+and uses it to augment context given to the model. This results in the LLM
+generating a more [grounded](https://www.deepset.ai/blog/rag-llm-evaluation-groundedness) response.
 
-When considering plugins for Retrieval Augmented Generation (RAG), you should ask 
-yourself two questions:
+## Semantic search
 
-- How will you (or your AI agent) "search" for the required data? Do you need 
-  semantic search or classic search?
-- Do you already know the data the AI agent needs ahead of time (pre-fetched data), 
-  or does the AI agent need to retrieve the data dynamically?
-- How will you keep your data secure and prevent oversharing of sensitive 
-  information?
-
-In this module, we'll focus on searching the required data.
-
-## Lab 1: Implement semantic search
-
-**Goal:** Learn how to integrate context into our prompts and use the vector 
-database to generate more accurate and relevant responses.
-
-### Semantic search
+The RAG pattern is often implemented by using semantic search for the retrieval part.
 
 Semantic search utilizes vector databases to understand and retrieve information 
 based on the meaning and context of the query rather than just matching keywords. 
@@ -49,357 +34,197 @@ document into an embedding. The idea of integrating context
 uses the same structure, we'll convert the question into an embedding
 then use the vector database to find the most relevant chunks.
 
-We'll use the same `embeddings` and `vectorStore` from the previous lab.
+## Labs
 
-### Exercise: Integrating Context
+### Lab 1: Implement semantic search
+
+**Goal:** Learn how to integrate context into our prompts and use the vector 
+database to generate more accurate and relevant responses.
+
+In this lab we'll connect the vector store we created earlier to the chat
+application.
+
+
+#### Exercise: Integrating Context
 
 Make sure to copy the starter code from 
 [code/module-03](https://github.com/wmeints/effective-llm-applications-workshop/tree/code/module-03) folder. 
 You can also continue working on the files from the previous module.
 
-The first step is to integrate the vector store into the `apps/chat/InfoSupport.AgentWorkshop.Chat` application. 
+The first step is to integrate the vector store into the `apps/chat/InfoSupport.AgentWorkshop.Chat` application
+so we can use it to provide the agent with context information.
 
 <Steps>
-1.  Create a new file `apps/chat/InfoSupport.AgentWorkshop.Chat/Tools/QuestionAnsweringTool.cs`. Add the following
-    code to it.
+1.  Add the following packages to `apps/chat/Infosupport.AgentWorkshop.Chat` project.
 
-    ```csharp
-    public class QuestionAnsweringTool(
-        Kernel kernel, IVectorStore vectorStore,
-        ITextEmbeddingGenerationService embeddingGenerator)
-    {
-        [KernelFunction("search_content")]
-        public async Task<string> AnswerAsync(string question)
-        {
-            //Content for the method
-        }
-    }
+    ```bash
+    dotnet add package Microsoft.SemanticKernel.Connectors.Qdrant
+    dotnet add Aspire.Qdrant.Client
     ```
 
-2.  Create an embedding vector for the question. Modify the `AnswerAsync` method by adding
-    the following code to it:
+    This enables us to communicate with the Qdrant vector store we created in
+    the previous module. We'll need to include some configuration to make this
+    work.
 
+2.  Configure the Qdrant client in the chat application. Add the following
+    statement to the `apps/chat/InfoSupport.AgentWorkshop.Chat/Program.cs` file
+    below the line where it says `AddAzureOpenAIClient("languagemodel")`. 
+   
     ```csharp
-    var questionEmbedding = await embeddingGenerator.GenerateEmbeddingAsync(question);
+    builder.AddQdrantClient("qdrant");
     ```
-
-    <Aside>
-    Make sure you are using the same embedding model as the one used
-    in the previous lab. Otherwise, a different embedding value will be generated.
-    The vector store will then not find any relevant chunks. Most likely, the 
-    response will be different from the one we would get if we use the same embedding model.
-    </Aside>
-
-3. Search the vector store
-
-    Now that we have the embedding, we can search the vector store for the most
-    relevant chunks. Add the following code to the end of the `AnswerAsync` method.
-
-    ```csharp
-    var collection = vectorStore.GetCollection<ulong, TextUnit>("Content");
-
-    var searchOptions = new VectorSearchOptions
-    {
-        Top = 3,
-    };
-
-    var searchResponse = await collection.VectorizedSearchAsync(
-        questionEmbedding, searchOptions);
-    ```
-
-    The `searchResponse` is a list of `VectorSearchResult` objects. Each object contains
-    a `Chunk` and a `Score` property. The `Chunk` is the text unit that is most similar
-    to the question. The `Score` is the similarity score between the question and the chunk.
     
-4. Combine the chunks into a single response 
+    This statement enables the Qdrant client dependency in the application. 
+    We'll need it for the next step where we configure the vector store
+    connector for Semantic Kernel.
 
-    Now that we have the chunks that are most similar to the question, we need to
-    combine them into a single list of strings as context for the completion agent.
+3.  Configure the vector store connector. Add the following statement to
+    `apps/chat/InfoSupport.AgentWorkshop.Chat/Program.cs`.
+    Add it below the line where we configure the `Kernel` object.
 
     ```csharp
-    var fragments = new List<TextUnit>();
-
-    await foreach (var fragment in searchResponse)
-    {
-        fragments.Add(fragment.Record);
-    };
+    builder.Services.AddQdrantVectorStore();
     ```
-
 </Steps>
 
-## Lab 2: Prompt Design
+### Lab 2: RAG as a function
 
-**Goal:** Learn how to design effective prompts to generate more accurate and 
-relevant responses.
+**Goal:** Learn how to provide context information to an agent.
 
-Prompt design is a crucial aspect of working with AI models in Semantic Kernel. 
-A well-designed prompt can significantly improve the quality and reliability of 
-AI responses. In this lab, we'll explore key principles and best practices for 
-creating effective prompts that:
+In this lab we're going to use the configured vector store with a feature called 
+function calling to provide relevant context information to the agent.
 
-- Provide clear instructions and context
-- Set appropriate constraints and boundaries
-- Handle edge cases and potential errors
-- Maintain consistency in responses
-- Optimize token usage
+#### Function calling in Semantic Kernel
 
-We'll learn how to structure prompts using Semantic Kernel's prompt templates and 
-how to incorporate system messages, user messages, and function results into our 
-prompts. You'll also discover how to use prompt variables and how to chain 
-multiple prompts together for complex tasks.
+Function calling is a feature that almost any LLM has. Alongside your prompt you
+provide metadata listing functions that the LLM can call.
 
-### What is a Prompt?
+Functions come in two variants:
 
-A prompt is a structured input that guides an AI model's behavior and output. In 
-Semantic Kernel, prompts are more than just text - they're powerful tools that 
-combine:
+- Data retrieval functions
+- Task automation functions
 
-- **Instructions**: Clear directions for the AI model
-- **Context**: Relevant information to ground the response
-- **Examples**: Sample inputs and expected outputs
-- **Constraints**: Rules and boundaries for the response
+For each function you want the LLM to be able to call, you need to provide a
+name, a description what the tool does, and information about the parameters
+that the LLM must provide data for.
 
-Prompts can be static or dynamic, using variables and templates to adapt to 
-different scenarios. They can also include function results, allowing the AI to 
-access external data and capabilities.
+The LLM doesn't call functions itself, instead you get a response from the LLM
+indicating that you should make a function call. This gives you the opportunity
+to validate the proposed function call and invoke the function if you approve
+it.
 
-Think of a prompt as a conversation blueprint that helps the AI understand:
-- What task needs to be performed
-- How to approach the task
-- What information is available
-- What format the response should take
+Semantic Kernel handles function calls for you while providing you with the
+necessary controls to limit what the LLM can do.
 
-### Exercise: Prompt Design
+You can provide the `Kernel` object with one or more collection of functions
+called plugins. This enables you to reuse related functions across multiple
+agent applications if you like.
 
-In this lab, we'll create a prompt template that uses the `ChatCompletion`
-function.
+Plugins are a key component of Semantic Kernel. If you have already used
+plugins from ChatGPT or Copilot extensions in Microsoft 365, you're already
+familiar with them. With plugins, you can encapsulate your existing APIs into a
+collection that can be used by an AI. This allows you to give your AI the
+ability to perform actions that it wouldn't be able to do otherwise.
 
-<Steps>
-1. Create a prompt template
-
-    The Semantic Kernel prompt template language is a simple way to define
-    and compose AI functions using plain text. You can use it to create natural
-    language prompts, generate responses, extract information, invoke other prompts
-    or perform any other task that can be expressed with text.
-
-    You don't need to write any code or import any external libraries,
-    just use the curly braces `{{...}}` to embed expressions in your prompts.
-    Semantic Kernel will parse your template and execute the logic behind it. 
-    This way, you can easily integrate AI into your apps with minimal effort and maximum flexibility.
-
-    Below is an example of a prompt template that we'll use in this lab.
-
-    ```yaml
-    # answer_question.yaml
-    name: answer_question
-    template: |
-        You're a helpful assistant, supporting me by answering questions 
-        about the book building effective llm-based applications with
-        semantic kernel. Answer the question using the provided context.
-        If you don't know the answer, say so, don't make up 
-        answers.
-
-        ## Context
-        {{#each fragments}}
-        {{ .Content }}
-        {{/each}}
-
-        ## Question
-
-        {{question}}
-    template_format: handlebars
-    input_variables:
-        - name: fragments
-            description: The topic you want to discuss in the blog post.
-            is_required: true
-        - name: question
-            description: The question you want to ask about the topic.
-            is_required: true  
-    execution_settings:
-        default:
-            top_p: 0.98
-            temperature: 0.7
-            presence_penalty: 0.0
-            frequency_penalty: 0.0
-            max_tokens: 1200
-    ```
-
-    Things to point out:
-    - `## Context` and `## Question` are sections that will be replaced by the actual
-      context and question.
-    - `{{#each fragments}}` is a loop that will iterate over the `fragments` variable.
-    - `{{ .Content }}` is the content of the current fragment.
-    - `{{question}}` is the question that the user asked.
-    - `template_format: handlebars` is the format of the template.
-        handlebars is a popular templating engine that is used to generate HTML,
-        but it can be used to generate any text.
-
-    This way you're able to include the context in the prompt and use it to answer
-    the question.
-
-2. Read the template into memory
-
-    ```csharp
-    var template = File.ReadAllText("Prompts/answer_question.yaml");
-    ```
-
-3. Use the template in combination with the Kernel
-
-    The Kernel is able to parse the template and invoke the `ChatCompletion`
-    function using the prompt template. This will include the context in the prompt
-    and use it to answer the question.
-
-    ```shell
-    dotnet add package Microsoft.SemanticKernel.PromptTemplates.Handlebars
-    ```
-
-    Then, we can create the prompt template.
-    ```csharp
-    var promptTemplate = kernel.CreateFunctionFromPrompt(
-        promptTemplate: template, 
-        promptTemplateFactory: new HandlebarsPromptTemplateFactory()
-    );
-    ```
-
-4. Invoke the kernel function
-
-    Now that we have the prompt template, we can invoke the kernel function.
-
-    ```csharp
-    var response = await promptTemplate.InvokeAsync(
-        kernel,
-        new KernelArguments{
-            { "question", question },
-            { "fragments", fragments }
-        }
-    );
-    ```
-
-    The `KernelArguments` is a dictionary that contains the variables that will be
-    replaced in the prompt template. The `question` and `fragments` variables are
-    the question and the context that we'll use to answer the question. These are
-    the same variables that we defined in the prompt template.
-
-</Steps>
-
-<Aside>
-    This usage of the Kernel will trigger the semantic search for every question.
-    Behavior that can occur is that you see answers that incorporate content that
-    is not related to the question.
-
-    To fix this, look at the [Lab 3](#lab-3-rag-as-a-function) where we'll see
-    how to use RAG as a function.
-</Aside>
-
-## Lab 3: RAG as a function
-
-**Goal:** Learn how to use RAG as a function.
-
-### Semantic kernel plugins
-
-Plugins are a key component of Semantic Kernel. If you have already used plugins from ChatGPT or Copilot extensions in Microsoft 365, 
-you're already familiar with them. With plugins, you can encapsulate your existing APIs into a collection that can be used by an AI. 
-This allows you to give your AI the ability to perform actions that it wouldn't be able to do otherwise.
-
-In the context of RAG, using a plugin allows the LLM to perform a vector search and retrieve information
-when it decides to do so. This means that the information in the vector store is not used in every question
-that is asked.
-
-#### Different types of plugins
-
-There are typically two different types of functions that live under a plugin:
-
-- [Data retrieval functions](https://learn.microsoft.com/en-us/semantic-kernel/concepts/plugins/using-data-retrieval-functions-for-rag)
-- [Task automation functions](https://learn.microsoft.com/en-us/semantic-kernel/concepts/plugins/using-task-automation-functions?pivots=programming-language-csharp)
-
-This lab will focus on data retrieval functions.
-
-### Function calling
-
-Behind the scenes, Semantic Kernel leverages function calling, a native feature of most of the latest LLMs to allow LLMs, 
-to perform planning and to invoke your APIs. With function calling, LLMs can request (i.e., call) a particular function. 
-Semantic Kernel then marshals the request to the appropriate function in your codebase and returns the results back to the
-LLM so the LLM can generate a final response.
+In the context of RAG, using a plugin allows the LLM to perform a vector search
+and retrieve information when it decides to do so. This means that the
+information in the vector store is not used in every question that is asked.
 
 ### Exercise: RAG as a plugin
 
-In this lab, we'll learn how to implement the semantic search we did in the previous lab as a plugin.
-You're going to replace the previous implementation of RAG with a plugin.
+In this exercise, we'll learn how to implement the semantic search we did in the
+previous lab as a plugin. You're going to replace the previous implementation of
+RAG with a plugin.
 
 <Steps>
-1. Setup text search
-
-    [Text search](https://learn.microsoft.com/en-us/semantic-kernel/concepts/text-search/?pivots=programming-language-csharp)
-    is a higher level abstraction where the input is text with support for
-    filtering. Text search supports various types of output, including a simple string.
-    This allows text search to support many implementations, including vector search.
-
-    To use text search in combination with a vector store:
-        ```csharp
-        var generationService = kernel.GetRequiredService<ITextEmbeddingGenerationService>();
-        var chatCompletionService = kernel.GetRequiredService<IChatCompletionService>();
-
-        IVectorStore qdrantStore = new QdrantVectorStore(new QdrantClient("localhost"));
-        var collection = qdrantStore.GetCollection<ulong, TextUnit>("content");
-
-        var textSearch = new VectorStoreTextSearch<TextUnit>(
-                collection, 
-                generationService
-            );
-        ```
-
-2. Create a kernel function out of the text search
+1.  Add a new file in `apps/chat/InfoSupport.AgentWorkshop.Chat/Models/TextUnit.cs` with the following content:
 
     ```csharp
-    var searchFunction = textSearch.CreateGetTextSearchResults();
-    ```
+    using Microsoft.Extensions.VectorData;
 
-    This will create an instance implementation of the abstract class `KernelFunction`.
-    The [kernel function class](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/src/SemanticKernel.Abstractions/Functions/KernelFunction.cs)
-    represents a function that can be invoked as part of a Semantic Kernel workload.
+    namespace InfoSupport.AgentWorkshop.Chat.Models;
 
-    A plugin needs to provide details that semantically describe how they behave. 
-    This is used by the LLM to understand what functionality a function provides.
-
-3. Add the plugin to the kernel
-
-    ```csharp
-    kernel.Plugins.AddFromFunctions("SearchPlugin", [searchFunction]);
-    ```
-
-    This will add the plugin to the kernel and make it available to the LLM.
-
-4. Invoke the chat completion
-
-    Now that we have the plugin added to the kernel, we can invoke the chat completion.
-
-    ```csharp
-    var settings = new AzureOpenAIPromptExecutionSettings
+    public class TextUnit
     {
-        FunctionChoiceBehavior = FunctionChoiceBehavior.Auto()
-    };
+        [VectorStoreRecordKey]
+        public ulong Id { get; set; }
+        
+        [VectorStoreRecordData] 
+        public required string OriginalFileName { get; set; }
 
-    var response = await chatCompletionService.GetChatMessageContentAsync(
-        "Who is the writer of the book 'Building Effective LLM-Based Applications with Semantic Kernel'?",
-        settings,
-        kernel
-    );
+        [VectorStoreRecordData(IsFullTextIndexed = true)] 
+        public required string Content { get; set; }
+        
+        [VectorStoreRecordVector(1536)]
+        public ReadOnlyMemory<float> Embedding { get; set; }
+    }
     ```
 
-    What is important to note here is the property `FunctionChoiceBehavior`.
-    This property is used to enable somehting that is called **planning**.
-    [Click here for more information about planning.](https://learn.microsoft.com/en-us/semantic-kernel/concepts/planning?pivots=programming-language-csharp#the-automatic-planning-loop)
+    This class is an exact copy of the `TextUnit` class we used in the indexer
+    application and will provide the necessary structure for the retrieval
+    function that we're going to use.
 
+2.  Modify `apps/chat/InfoSupport.AgentWorkshop.Chat/Services/AgentCompletionService.cs`
+    to include a constructor parameter for the `IVectorStore`.
+
+    ```csharp
+    public class AgentCompletionService(Kernel kernel, ApplicationDbContext applicationDbContext, IVectorStore vectorStore) : IAgentCompletionService
+    {
+        // ... Rest of the code
+    }
+    ```
+
+    We'll need this vector store to setup the text search tool.
+    
+3.  Modify the `apps/chat/InfoSupport.AgentWorkshop.Chat/Services/AgentCompletionService.cs` to include a new function called `ConfigureAgent`
+    with the following content:
+
+    ```csharp
+    private ChatCompletionAgent ConfigureAgent()
+    {
+        var contentCollection = vectorStore.GetCollection<ulong, TextUnit>("Content");
+        var embeddingGenerator = kernel.GetRequiredService<ITextEmbeddingGenerationService>();
+        var textSearch = new VectorStoreTextSearch<TextUnit>(contentCollection, embeddingGenerator);
+        
+        kernel.Plugins.Add(textSearch.CreateWithGetTextSearchResults("BookContent"));
+        
+        var agent = new ChatCompletionAgent()
+        {
+            Name = "Mike",
+            Instructions = EmbeddedResource.Read("instructions.txt"),
+            Kernel = kernel,
+            Arguments = new KernelArguments(new AzureOpenAIPromptExecutionSettings
+            {
+                FunctionChoiceBehavior = FunctionChoiceBehavior.Auto()
+            })
+        };
+        
+        return agent;
+    }
+    ```
+
+    Make sure to remove the private field `_chatCompletionAgent` from the class.
+    We no longer initialize the agent in the constructor.
+
+    The new `ConfigureAgent` method is quite a bit larger than before. The main
+    different is that we now perform a lookup in the vector store for the Content collection
+    and connect it to a vector text search component. We then connect the text 
+    search as a plugin to the kernel object of the agent. This enables the agent
+    to perform the text search.
+
+4.  Modify the `GenerateResponseAsync` method to use the new agent initialization method.
+    Add the following code to the start of the method:
+
+    ```csharp
+    var agent = ConfigureAgent();
+    ```
+
+    Then replace all references to `_chatCompletionAgent` with the new `agent`
+    variable.
 </Steps>
 
-What is left now is to start the application and see the results!
-
-## References
-
-- [Vector search](https://learn.microsoft.com/en-us/semantic-kernel/concepts/vector-store-connectors/vector-search?pivots=programming-language-csharp)
-- [Prompt template syntax](https://learn.microsoft.com/en-us/semantic-kernel/concepts/prompts/prompt-template-syntax)
-- [Handlebars prompt template](https://learn.microsoft.com/en-us/semantic-kernel/concepts/prompts/handlebars-prompt-templates?pivots=programming-language-csharp)
-- [Semantic kernel plugins](https://learn.microsoft.com/en-us/semantic-kernel/concepts/plugins/?pivots=programming-language-csharp)
+What is left now is to start the application and see the results. You can run the application from `hosting/InfoSupport.AgentWorkshop.AppHost`.
+After the application host is started, you can go to http://localhost:3000/ to view the frontend and start chatting.
 
 ## Summary and next steps
 
