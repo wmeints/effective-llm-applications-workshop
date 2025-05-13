@@ -7,7 +7,7 @@ import { Aside, Steps } from "@astrojs/starlight/components";
 In this module, we explore how to build applications using Large Language Models (LLMs) and
 Semantic Kernel, Microsoft's open-source orchestration framework for AI.
 
-## 🧾 LLMs and Semantic Kernel
+## LLMs and Semantic Kernel
 
 Semantic Kernel enables you to:
 
@@ -29,12 +29,12 @@ read the [reference documentation](/reference/large-language-models).
 Semantic Kernel has a specific architectural pattern that makes it exceptionally strong for building
 agents. You can learn more about this pattern in the [reference documentation](/reference/semantic-kernel-architecture).
 
-# 🧪 Labs
+## Labs
 
 This hands-on workshop gradually builds understanding and experience with
 **LLMs** and **Semantic Kernel**.
 
-## 🧾 Lab 1: Setting up the lab environment
+### Lab 1: Setting up the lab environment
 
 **Goal**: Learn how to configure Semantic Kernel
 
@@ -43,7 +43,7 @@ environment. The labs for the workshop are located in the
 [labs](https://github.com/wmeints/effective-llm-applications-workshop/tree/main/code)
 folder.
 
-## 🧪 Hands-on lab: Configure the project
+#### Exercise: Configure the project
 
 <Steps>
 1. Copy the starter files for the lab to a new directory. Each of the labs has a `starter` and `final` folder. Make sure to copy the starter
@@ -90,14 +90,14 @@ terminal to configure the connection string for the language model:
    </Aside>
 </Steps>
 
-## 🧾 Lab 2: Creating Your First Agent
+### Lab 2: Creating Your First Agent
 
 **Goal:** Learn how to create a basic agent using Semantic Kernel.
 
 In this lab, we'll build a basic conversational agent using Semantic Kernel. We'll start with
 a simple system prompt and gradually add more capabilities.
 
-### 🧪 Hands-on Lab: Configure agent instructions
+#### Exercise: Configure agent instructions
 
 <Steps>
 1. Open `apps/chat/InfoSupport.AgentWorkshop.Chat/instructions.txt` to understand the agent's instructions.
@@ -127,7 +127,7 @@ a simple system prompt and gradually add more capabilities.
    agent loads its instructions from `instructions.txt` file we just opened.
 </Steps>
 
-### 🧪 Hands-on Lab: Generating a response
+#### Exercise: Generating a response
 
 Next, we need to implement the `GenerateResponseAsync` method. This method is
 responsible for generating a streaming response to a question from the user.
