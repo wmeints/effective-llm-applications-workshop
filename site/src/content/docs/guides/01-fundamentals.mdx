@@ -125,7 +125,7 @@ a simple system prompt and gradually add more capabilities.
    ```
 
    This code defines an agent with a name, instructions, and the kernel instance. The
-   agent loads its instructions from `instructions.txt` file we just opened.
+   agent loads its instructions from the `instructions.txt` file we just opened.
 </Steps>
 
 #### Exercise: Generating a response
@@ -227,7 +227,7 @@ responsible for generating a streaming response to a question from the user.
     ```
 
     The response stream here is an `IAsyncEnumerable` — an enumerable stream of
-    LLM-generated content. If you don't like streaming,, you can use `InvokeAsync`
+    LLM-generated content. If you don't like streaming, you can use `InvokeAsync`
     instead. For this workshop, we use streaming as it provides a nicer user experience.
 
 5.  Add the following code to the `GenerateResponseAsync` method to record the assistant response.
