@@ -1,8 +1,3 @@
----
-title: Context integration
----
-
-import { Aside, Steps } from "@astrojs/starlight/components";
 
 In this module, we'll explore how to use the information we processed in the
 previous module as extra context information for the agent.
@@ -63,7 +58,7 @@ so we can use it to provide the agent with context information.
 
     ```bash
     dotnet add package Microsoft.SemanticKernel.Connectors.Qdrant --prerelease
-    dotnet add Aspire.Qdrant.Client
+    dotnet add package Aspire.Qdrant.Client
     ```
 
     This enables us to communicate with the Qdrant vector store we created in
