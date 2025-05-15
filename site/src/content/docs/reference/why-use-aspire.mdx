@@ -5,15 +5,15 @@ title: Why use Aspire for building LLM-based applications?
 Building LLM-based applications, and especially RAG applications, involves many moving
 parts. First and foremost, you have to deal with a language model hosted in the cloud.
 Next, you must record history and store documents in a vector database. Finally, you
-need to combine the front end and APIs into a working application.
+need to combine the frontend and APIs into a working application.
 
-Combining all these components is a lot of work. But there's is a solution: .NET Aspire.
+Combining all these components is a lot of work. But there's a solution: .NET Aspire.
 A new framework from Microsoft that helps developers build distributed applications.
 
 Aspire has a couple of components to it that matter for building LLM-based applications:
 
 1. **The application host** serves as an orchestrator, putting all the moving parts
-   together so you can run the infrastructure, API, and front end by starting an
+   together so you can run the infrastructure, API, and frontend by starting an
    application host project.
 
 2. **The Aspire dashboard** exposes metrics, logging, and tracing in a single website
@@ -27,7 +27,7 @@ Aspire has a couple of components to it that matter for building LLM-based appli
 
 While Aspire mainly focuses on orchestrating distributed applications, you can generate
 deployment scripts using the application model you create in the application host. For
-example, you can easily use the [Azure Developer CLI][AZD] to deploy an Aspire-based
+example, you can easily use the [Azure Developer CLI](https://learn.microsoft.com/azure/developer/azure-developer-cli/) to deploy an Aspire-based
 application to Azure.
 
 For the purpose of this workshop, we ensured that the application host and service

@@ -51,7 +51,7 @@ Make sure to copy the starter code from
 [code/module-03](https://github.com/wmeints/effective-llm-applications-workshop/tree/code/module-03) folder. 
 You can also continue working on the files from the previous module.
 
-Also [download the book raw markdown files as dataset.](https://github.com/wmeints/effective-llm-applications/tree/main/manuscript). 
+Also [download the book's raw markdown files as dataset](https://github.com/wmeints/effective-llm-applications/tree/main/manuscript). 
 Place these files in the `apps/indexer/InfoSupport.AgentWorkshop.Indexer/Content` directory if you haven't downloaded the content
 into the `Content` directory before. You'll need these files for the indexer to work correctly.
 
@@ -141,7 +141,7 @@ previous lab as a plugin. You're going to replace the previous implementation of
 RAG with a plugin.
 
 <Steps>
-1.  Add a new file in `apps/chat/InfoSupport.AgentWorkshop.Chat/Models/TextUnit.cs` with the following content:
+1.  Add a new file `TextUnit.cs` to the directory `apps/chat/InfoSupport.AgentWorkshop.Chat/Models` with the following content:
 
     ```csharp
     using Microsoft.Extensions.VectorData;
@@ -211,7 +211,7 @@ RAG with a plugin.
     We no longer initialize the agent in the constructor.
 
     The new `ConfigureAgent` method is quite a bit larger than before. The main
-    different is that we now perform a lookup in the vector store for the Content collection
+    difference is that we now perform a lookup in the vector store for the Content collection
     and connect it to a vector text search component. We then connect the text 
     search as a plugin to the kernel object of the agent. This enables the agent
     to perform the text search.

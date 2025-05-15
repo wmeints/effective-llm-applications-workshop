@@ -12,7 +12,6 @@ using Microsoft.SemanticKernel;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
-builder.AddAzureOpenAIClient("languagemodel");
 builder.AddNpgsqlDbContext<ApplicationDbContext>("chatservicedb");
 
 // TODO: Configure the kernel object.

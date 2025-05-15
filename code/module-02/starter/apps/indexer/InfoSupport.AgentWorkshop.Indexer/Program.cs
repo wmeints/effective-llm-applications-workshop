@@ -1,4 +1,5 @@
 using InfoSupport.AgentWorkshop.Indexer.Services;
+using Microsoft.SemanticKernel;
 
 var builder = WebApplication.CreateBuilder(args);
 
