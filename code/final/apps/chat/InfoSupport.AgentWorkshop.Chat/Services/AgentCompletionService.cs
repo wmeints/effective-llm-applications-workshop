@@ -3,41 +3,38 @@ using InfoSupport.AgentWorkshop.Chat.Data;
 using InfoSupport.AgentWorkshop.Chat.Models;
 using InfoSupport.AgentWorkshop.Chat.Shared;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.AI;
+using Microsoft.Extensions.VectorData;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Agents;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Connectors.AzureOpenAI;
+using Microsoft.SemanticKernel.Connectors.Qdrant;
+using Microsoft.SemanticKernel.Data;
+using Microsoft.SemanticKernel.Embeddings;
+using OpenAI.Chat;
 
 namespace InfoSupport.AgentWorkshop.Chat.Services;
 
 /// <summary>
 /// Provides services for managing conversations and generating agent responses.
 /// </summary>
-public class AgentCompletionService(Kernel kernel, ApplicationDbContext applicationDbContext) : IAgentCompletionService
+public class AgentCompletionService(Kernel kernel, ApplicationDbContext applicationDbContext, IVectorStore vectorStore) : IAgentCompletionService
 {
     // The chat completion agent is an agent that has no persistent backend on its own.
     // Instead we're relying on our custom thread implementation to persist the conversation history.
     // We're including custom function choice behavior to make sure our agent can use tools.
 
-    private readonly ChatCompletionAgent _chatCompletionAgent = new()
-    {
-        Name = "Mike",
-        Instructions = EmbeddedResource.Read("instructions.txt"),
-        Kernel = kernel,
-        Arguments = new KernelArguments(new AzureOpenAIPromptExecutionSettings
-        {
-            FunctionChoiceBehavior = FunctionChoiceBehavior.Auto()
-        })
-    };
 
     /// <summary>
     /// Generate a response using the agent.
     /// </summary>
     /// <param name="request">Completion request to generate a response for.</param>
     /// <returns>Returns the response as an async enumerable stream.</returns>
-    public async IAsyncEnumerable<AgentResponseItem<StreamingChatMessageContent>> GenerateResponseAsync(AgentCompletionRequest request)
+    public async IAsyncEnumerable<AgentResponseItem<StreamingChatMessageContent>> GenerateResponseAsync(
+        AgentCompletionRequest request)
     {
-
+        var agent = ConfigureAgent();
 
         var conversation = await applicationDbContext.Conversations
             .SingleOrDefaultAsync(x => x.ThreadId == request.ThreadId)
@@ -55,7 +52,7 @@ public class AgentCompletionService(Kernel kernel, ApplicationDbContext applicat
         // Record the user message with the current conversation.
         conversation.AppendUserMessage(request.Prompt);
 
-        var responseStream = _chatCompletionAgent.InvokeStreamingAsync(request.Prompt, thread);
+        var responseStream = agent.InvokeStreamingAsync(request.Prompt, thread);
         var assistantResponseMessageBuilder = new StringBuilder();
 
         await foreach (var chunk in responseStream)
@@ -73,6 +70,28 @@ public class AgentCompletionService(Kernel kernel, ApplicationDbContext applicat
         conversation.AppendAssistantResponse(assistantResponseMessageBuilder.ToString());
 
         await applicationDbContext.SaveChangesAsync().ConfigureAwait(false);
+    }
+
+    private ChatCompletionAgent ConfigureAgent()
+    {
+        var contentCollection = vectorStore.GetCollection<ulong, TextUnit>("content");
+        var embeddingGenerator = kernel.GetRequiredService<ITextEmbeddingGenerationService>();
+        var textSearch = new VectorStoreTextSearch<TextUnit>(contentCollection, embeddingGenerator);
+
+        kernel.Plugins.Add(textSearch.CreateWithGetTextSearchResults("BookContent"));
+
+        var agent = new ChatCompletionAgent()
+        {
+            Name = "Mike",
+            Instructions = EmbeddedResource.Read("instructions.txt"),
+            Kernel = kernel,
+            Arguments = new KernelArguments(new AzureOpenAIPromptExecutionSettings
+            {
+                FunctionChoiceBehavior = FunctionChoiceBehavior.Auto()
+            })
+        };
+
+        return agent;
     }
 
     private ChatHistory BuildChatHistory(Conversation conversation)
