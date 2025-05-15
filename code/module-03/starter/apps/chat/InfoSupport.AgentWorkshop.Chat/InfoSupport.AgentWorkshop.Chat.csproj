@@ -9,20 +9,22 @@
   </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Aspire.Azure.AI.OpenAI" Version="9.2.0-preview.1.25209.2" />
-        <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.2.0" />
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.4" />
+        <PackageReference Include="Aspire.Azure.AI.OpenAI" Version="9.2.1-preview.1.25222.1" />
+        <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.2.1" />
+        <PackageReference Include="Aspire.Qdrant.Client" Version="9.2.1" />
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.5" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.4" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.4">
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.5" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.5">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.4" />
-        <PackageReference Include="Microsoft.SemanticKernel" Version="1.49.0" />
-        <PackageReference Include="Microsoft.SemanticKernel.Agents.Core" Version="1.49.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.5" />
+        <PackageReference Include="Microsoft.SemanticKernel" Version="1.50.0" />
+        <PackageReference Include="Microsoft.SemanticKernel.Agents.Core" Version="1.50.0" />
+        <PackageReference Include="Microsoft.SemanticKernel.Connectors.Qdrant" Version="1.50.0-preview" />
         <PackageReference Include="Swashbuckle.AspNetCore.ReDoc" Version="8.1.1" />
-        <PackageReference Include="System.Text.Json" Version="9.0.4" />
+        <PackageReference Include="System.Text.Json" Version="9.0.5" />
         
     </ItemGroup>
 
