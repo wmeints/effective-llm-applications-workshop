@@ -13,11 +13,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 builder.AddAzureOpenAIClient("languagemodel");
+builder.AddQdrantClient("qdrant");
 builder.AddNpgsqlDbContext<ApplicationDbContext>("chatservicedb");
 
 builder.Services.AddKernel()
     .AddAzureOpenAIChatCompletion(builder.Configuration["LanguageModel:ChatCompletionDeploymentName"]!)
     .AddAzureOpenAITextEmbeddingGeneration(builder.Configuration["LanguageModel:TextEmbeddingDeploymentName"]!);
+
+builder.Services.AddQdrantVectorStore();
 
 builder.Services.AddScoped<IAgentCompletionService, AgentCompletionService>();
 
